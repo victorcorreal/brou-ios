@@ -1,0 +1,40 @@
+Search for iPhone and iPad
+==========================
+
+Part of the JavaScript in this app comes from Search, a WebKit browser
+for macOS by Office Commun (https://github.com/driceroland/Search), released
+under the MIT License. It was taken from Victor Correal's own build of Search
+(private repository victorcorreal/search, commit 7689f1f, 10 October 2026):
+
+  Shared (Extension)/Resources/dark.js       from Sources/Search/DarkPages.swift (DarkPages.script)
+  Shared (Extension)/Resources/reader.js     from Sources/Search/Reader.swift (Reader.script)
+  Shared (Extension)/Resources/text-only.js  from Sources/Search/ReaderText.swift (Reader.textOnlyScript)
+  Tests/pages.py                             test pages from Tests/dark_pages.py
+
+The code is unchanged apart from the identifiers it leaves on a page
+(element ids, a data attribute and a window property), renamed so that they
+carry no other product's name.
+
+Original notice:
+
+  MIT License
+
+  Copyright (c) 2026 Office Commun
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
