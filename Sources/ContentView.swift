@@ -52,28 +52,42 @@ struct ContentView: View {
 
 private struct Narrow: View {
     @EnvironmentObject var browser: Browser
+    var body: some View {
+        if let tab = browser.active {
+            NarrowTab(tab: tab).id(tab.id)
+        } else {
+            Palette.ground.ignoresSafeArea()
+        }
+    }
+}
+
+/// One tab on the iPhone. An empty one is the Mac's: the field in the middle,
+/// and only the buttons under it.
+private struct NarrowTab: View {
+    @EnvironmentObject var browser: Browser
+    @ObservedObject var tab: Tab
     @State private var typing = ""
     @FocusState private var focused: Bool
 
     var body: some View {
         VStack(spacing: 0) {
-            PageArea()
+            PageArea(tab: tab, typing: $typing, focused: $focused)
                 .overlay(alignment: .bottom) {
-                    if focused, !typing.isEmpty {
+                    if !tab.isBlank, focused, !typing.isEmpty {
                         Suggestions(typed: typing) { focused = false }
                             .padding(12)
                     }
                 }
             LoginStrip()
-            if let tab = browser.active {
+            if !(tab.isBlank && focused) {
                 VStack(spacing: 10) {
-                    AddressBar(tab: tab, typing: $typing, focused: $focused)
+                    if !tab.isBlank { AddressBar(tab: tab, typing: $typing, focused: $focused) }
                     if !focused { NarrowButtons(tab: tab) }
                 }
                 .padding(.horizontal, 12)
                 .padding(.top, 8)
                 .padding(.bottom, focused ? 8 : 2)
-                .background(.bar)
+                .background(tab.isBlank ? AnyShapeStyle(Palette.ground) : AnyShapeStyle(.bar))
             }
         }
     }
@@ -122,8 +136,6 @@ struct TabCount: View {
 
 private struct Wide: View {
     @EnvironmentObject var browser: Browser
-    @State private var typing = ""
-    @FocusState private var focused: Bool
     @State private var columns = NavigationSplitViewVisibility.all
 
     var body: some View {
@@ -131,36 +143,57 @@ private struct Wide: View {
             Sidebar()
                 .navigationSplitViewColumnWidth(min: 220, ideal: 260, max: 340)
         } detail: {
-            VStack(spacing: 0) {
+            Group {
                 if let tab = browser.active {
-                    HStack(spacing: 14) {
-                        Button { tab.back() } label: { Image(systemName: "chevron.backward") }
-                            .disabled(!tab.canGoBack)
-                            .accessibilityLabel("Back")
-                        Button { tab.forward() } label: { Image(systemName: "chevron.forward") }
-                            .disabled(!tab.canGoForward)
-                            .accessibilityLabel("Forward")
-                        AddressBar(tab: tab, typing: $typing, focused: $focused)
-                        PageMenu(tab: tab)
-                        Button { browser.newTab() } label: { Image(systemName: "plus") }
-                            .accessibilityLabel("New Tab")
-                    }
-                    .font(.title3)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .background(.bar)
+                    WideTab(tab: tab).id(tab.id)
+                } else {
+                    Palette.ground
                 }
-                LoginStrip()
-                PageArea()
-                    .overlay(alignment: .top) {
-                        if focused, !typing.isEmpty {
-                            Suggestions(typed: typing) { focused = false }
-                                .frame(maxWidth: 560)
-                                .padding(12)
-                        }
-                    }
             }
             .toolbar(.hidden, for: .navigationBar)
+        }
+    }
+}
+
+/// One tab beside the sidebar. An empty one has the field in the middle, as
+/// on the Mac, and only the buttons along the top.
+private struct WideTab: View {
+    @EnvironmentObject var browser: Browser
+    @ObservedObject var tab: Tab
+    @State private var typing = ""
+    @FocusState private var focused: Bool
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 14) {
+                Button { tab.back() } label: { Image(systemName: "chevron.backward") }
+                    .disabled(!tab.canGoBack)
+                    .accessibilityLabel("Back")
+                Button { tab.forward() } label: { Image(systemName: "chevron.forward") }
+                    .disabled(!tab.canGoForward)
+                    .accessibilityLabel("Forward")
+                if tab.isBlank {
+                    Spacer()
+                } else {
+                    AddressBar(tab: tab, typing: $typing, focused: $focused)
+                }
+                PageMenu(tab: tab)
+                Button { browser.newTab() } label: { Image(systemName: "plus") }
+                    .accessibilityLabel("New Tab")
+            }
+            .font(.title3)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(tab.isBlank ? AnyShapeStyle(Palette.ground) : AnyShapeStyle(.bar))
+            LoginStrip()
+            PageArea(tab: tab, typing: $typing, focused: $focused)
+                .overlay(alignment: .top) {
+                    if !tab.isBlank, focused, !typing.isEmpty {
+                        Suggestions(typed: typing) { focused = false }
+                            .frame(maxWidth: 560)
+                            .padding(12)
+                    }
+                }
         }
     }
 }
