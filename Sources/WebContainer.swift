@@ -27,63 +27,98 @@ struct WebContainer: UIViewRepresentable {
     }
 }
 
-/// What a tab shows before it has gone anywhere: the bookmarks, or nothing.
+/// What a tab shows before it has gone anywhere, as on the Mac: the one
+/// field, alone, a little above the middle, nothing written in it.
 struct BlankPage: View {
     @EnvironmentObject var browser: Browser
-    @EnvironmentObject var bookmarks: Bookmarks
+    @Binding var typing: String
+    @FocusState.Binding var focused: Bool
 
     var body: some View {
-        let sites = Bookmarks.sites(bookmarks.roots)
-        ScrollView {
-            if !sites.isEmpty {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 88), spacing: 16)], spacing: 20) {
-                    ForEach(sites.prefix(24)) { site in
-                        Button {
-                            if let url = site.url.flatMap(URL.init(string:)) { browser.active?.go(to: url) }
-                        } label: {
-                            VStack(spacing: 8) {
-                                Text(String(Address.pretty(site.url.flatMap(URL.init(string:))).prefix(1)).uppercased())
-                                    .font(.title2.weight(.semibold))
-                                    .frame(width: 56, height: 56)
-                                    .background(.quaternary, in: RoundedRectangle(cornerRadius: 14))
-                                Text(site.title)
-                                    .font(.caption)
-                                    .lineLimit(2)
-                                    .multilineTextAlignment(.center)
-                            }
-                            .foregroundStyle(.primary)
+        GeometryReader { geo in
+            VStack {
+                Spacer()
+                field
+                    .frame(maxWidth: min(560, max(0, geo.size.width - 28)))
+                    .overlay(alignment: .top) {
+                        if focused, !typing.isEmpty {
+                            Suggestions(typed: typing) { focused = false }
+                                .frame(maxWidth: min(560, max(0, geo.size.width - 28)))
+                                .offset(y: 62)
                         }
                     }
+                Spacer()
+            }
+            // Lifted a little above centre: dead centre reads as low.
+            .padding(.bottom, 60)
+            .frame(maxWidth: .infinity)
+        }
+        .background(Palette.ground.ignoresSafeArea())
+        .onAppear { focused = true }
+    }
+
+    private var field: some View {
+        TextField("", text: $typing)
+            .font(.system(size: 17))
+            .foregroundStyle(Palette.ink)
+            .keyboardType(.webSearch)
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+            .submitLabel(.go)
+            .focused($focused)
+            .onSubmit {
+                browser.go(typing)
+                focused = false
+            }
+            .frame(height: 22)
+            .padding(.horizontal, 22)
+            .padding(.vertical, 14)
+            .background {
+                ZStack {
+                    Breath()
+                    RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Palette.ground)
                 }
-                .padding(24)
             }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemBackground))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .strokeBorder(Palette.hairline, lineWidth: 1)
+                    .allowsHitTesting(false)
+            )
+            .shadow(color: .black.opacity(0.06), radius: 24, y: 8)
     }
 }
 
-/// The page area: the active tab's page, or its blank state.
+/// A slow, almost invisible breath under the empty tab's field, as on the
+/// Mac: a glow of the text's colour, 0.97 to 1.03 of the field's size and
+/// 65% to full, 2.6 s each way. A thing that never moves at all reads as a
+/// picture of an app rather than an app.
+private struct Breath: View {
+    @State private var out = false
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: 26, style: .continuous)
+            .fill(Palette.ground)
+            .shadow(color: Palette.ink.opacity(0.07), radius: 26)
+            .scaleEffect(out ? 1.03 : 0.97)
+            .opacity(out ? 1 : 0.65)
+            .allowsHitTesting(false)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 2.6).repeatForever(autoreverses: true)) { out = true }
+            }
+    }
+}
+
+/// The page area: the tab's page, or its empty state.
 struct PageArea: View {
-    @EnvironmentObject var browser: Browser
-
-    var body: some View {
-        if let tab = browser.active {
-            ZStack {
-                // Under the clock too: a dark page shouldn't end in a white band.
-                WebContainer(tab: tab).ignoresSafeArea(edges: .top)
-                PageState(tab: tab)
-            }
-        } else {
-            Color(.systemBackground)
-        }
-    }
-}
-
-private struct PageState: View {
     @ObservedObject var tab: Tab
+    @Binding var typing: String
+    @FocusState.Binding var focused: Bool
 
     var body: some View {
-        if tab.isBlank { BlankPage() }
+        ZStack {
+            // Under the clock too: a dark page shouldn't end in a white band.
+            WebContainer(tab: tab).ignoresSafeArea(edges: .top)
+            if tab.isBlank { BlankPage(typing: $typing, focused: $focused) }
+        }
     }
 }

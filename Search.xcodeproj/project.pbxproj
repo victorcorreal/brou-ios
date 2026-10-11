@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		06FB637385D4A20F93B58FD0 /* reader-after.js in Resources */ = {isa = PBXBuildFile; fileRef = A15AFAE917D750584FAADF21 /* reader-after.js */; };
 		10627B73390F010A63B771F7 /* Vault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1952C5FA83B69C9C51798274 /* Vault.swift */; };
+		17576765DA7ACD971AAC1BBF /* Design.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE7704444DCB52A1CD9C845 /* Design.swift */; };
 		20CAA28601BA95C8CD2CC050 /* text-only.js in Resources */ = {isa = PBXBuildFile; fileRef = 19CE4355CF28E3B50CE6634E /* text-only.js */; };
 		2B66EF7105946D072826C046 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CF413DE30874E60DE268DAB /* Tab.swift */; };
 		37C8A3E4F61962EFEC0CAB4F /* SearchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A3B44C086CFCCA8A961578 /* SearchApp.swift */; };
@@ -51,6 +52,7 @@
 		E0BAC399B8B08F41248054CE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ECC42654F710D67FFB45D744 /* Sheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheets.swift; sourceTree = "<group>"; };
 		F90A56CF45FAC6BA5003B7D1 /* Browser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
+		FBE7704444DCB52A1CD9C845 /* Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Design.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -63,6 +65,7 @@
 				F90A56CF45FAC6BA5003B7D1 /* Browser.swift */,
 				615ED988437097F4C0D1C372 /* CloudSync.swift */,
 				74065D524432E1FEBC40FB9E /* ContentView.swift */,
+				FBE7704444DCB52A1CD9C845 /* Design.swift */,
 				207CD9300A01D48D22FD0EF7 /* Forms.swift */,
 				152FECB80A2F4213A64ADFAA /* Scripts.swift */,
 				34A3B44C086CFCCA8A961578 /* SearchApp.swift */,
@@ -194,6 +197,7 @@
 				90574610C10E93BB9953CF10 /* Browser.swift in Sources */,
 				907801F62E6B1C0A409D6352 /* CloudSync.swift in Sources */,
 				B52FBFCD891E62D64E7913B5 /* ContentView.swift in Sources */,
+				17576765DA7ACD971AAC1BBF /* Design.swift in Sources */,
 				58EB3EB5F03635C5DB79CC98 /* Forms.swift in Sources */,
 				9FCC6C84247A5962E1E97197 /* Scripts.swift in Sources */,
 				37C8A3E4F61962EFEC0CAB4F /* SearchApp.swift in Sources */,
