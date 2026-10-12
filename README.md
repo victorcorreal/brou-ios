@@ -40,7 +40,7 @@ Firma con el equipo Great Heights Systems S.L. (`E653G759EN`). Instalada así, d
 
 ## Probado
 
-En el simulador iPhone 18 Pro (iOS 27.0): sesión restaurada con tres pestañas, páginas oscuras con fotos en su color y la zona de la hora en negro, modo lectura solo texto, añadir favorito, cambiar de pestaña, guardar una contraseña al enviar un formulario y rellenarla después. Las contraseñas de la web abierta (12-oct-2026): con dos cuentas en `localhost` y otra en `127.0.0.1` cuyo usuario contiene "localhost", la llave muestra solo las dos primeras, borra una sin tocar la otra y la barra deja de ofrecerla. En el iPad Pro 11" (M5): barra lateral con pestañas y favoritos.
+En el simulador iPhone 18 Pro (iOS 27.0): sesión restaurada con tres pestañas, páginas oscuras con fotos en su color y la zona de la hora en negro, modo lectura solo texto, añadir favorito, cambiar de pestaña, guardar una contraseña al enviar un formulario y rellenarla después. Las contraseñas de la web abierta (12-oct-2026): con dos cuentas en `localhost` y otra en `127.0.0.1` cuyo usuario contiene "localhost", la llave muestra solo las dos primeras, borra una sin tocar la otra y la barra deja de ofrecerla. Dos cuentas con el mismo usuario en `localhost`, una guardada por http y otra por https, con contraseñas distintas (12-oct-2026): cada una se muestra y se rellena con la suya. En el iPad Pro 11" (M5): barra lateral con pestañas y favoritos.
 
 No se puede probar en el simulador: la sincronización con iCloud, porque el simulador no tiene cuenta. Se prueba con tu iPhone y tu Mac.
 

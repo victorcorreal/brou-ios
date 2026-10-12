@@ -79,8 +79,11 @@ enum Vault {
             .sorted { ($0.used ?? .distantPast) > ($1.used ?? .distantPast) }
     }
 
+    /// By its reference when it has one, and only by that: by host and user
+    /// it could be the other item that shares them.
     static func secret(of kept: Kept) -> String? {
-        kept.ref.flatMap(secret(ref:)) ?? secret(host: kept.host, user: kept.user)
+        guard let ref = kept.ref else { return secret(host: kept.host, user: kept.user) }
+        return secret(ref: ref)
     }
 
     private static func rows(_ extra: [String: Any]) -> [[String: Any]] {
@@ -106,14 +109,23 @@ enum Vault {
         return String(data: data, encoding: .utf8)
     }
 
+    /// The reference and nothing to narrow it: the shared group answers
+    /// errSecParam to a read by reference with a label or a group beside it
+    /// (an update or a delete takes them). The reference came from `rows`.
     private static func secret(ref: Data) -> String? {
-        var query = base([kSecValuePersistentRef as String: ref])
-        query[kSecReturnData as String] = true
-        query[kSecMatchLimit as String] = kSecMatchLimitOne
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassInternetPassword,
+            kSecValuePersistentRef as String: ref,
+            kSecAttrSynchronizable as String: kSecAttrSynchronizableAny,
+            kSecReturnData as String: true,
+            kSecMatchLimit as String: kSecMatchLimitOne,
+        ]
         var out: CFTypeRef?
-        guard SecItemCopyMatching(query as CFDictionary, &out) == errSecSuccess,
-              let data = out as? Data
-        else { return nil }
+        let status = SecItemCopyMatching(query as CFDictionary, &out)
+        guard status == errSecSuccess, let data = out as? Data else {
+            if status != errSecItemNotFound { NSLog("Vault: keychain read failed (%d)", status) }
+            return nil
+        }
         return String(data: data, encoding: .utf8)
     }
 
@@ -129,7 +141,8 @@ enum Vault {
               let user = row[kSecAttrAccount as String] as? String
         else { return nil }
         let ref = row[kSecValuePersistentRef as String] as? Data
-        guard let password = ref.flatMap(secret(ref:)) ?? secret(host: host, user: user) else { return nil }
+        let password = if let ref { secret(ref: ref) } else { secret(host: host, user: user) }
+        guard let password else { return nil }
         let (used, clear) = noted(row)
         return Login(host: host, user: user, password: password, used: used, clear: clear, ref: ref)
     }
