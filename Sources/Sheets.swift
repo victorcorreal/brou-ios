@@ -214,19 +214,27 @@ private struct MoveSheet: View {
 // MARK: - passwords
 
 struct PasswordsView: View {
+    @EnvironmentObject var browser: Browser
     @Environment(\.dismiss) private var dismiss
+    /// Only this site's passwords (the page's, from the key); nil for all.
+    @State private var site: String?
     @State private var kept: [Kept] = Vault.all()
     @State private var shown: [String: String] = [:]
     @State private var query = ""
+    @State private var doomed: Kept?
+
+    init(site: String? = nil) {
+        _site = State(initialValue: site)
+    }
 
     var body: some View {
         NavigationStack {
             List {
-                let words = query.lowercased()
-                ForEach(kept.filter { words.isEmpty || $0.host.contains(words) || $0.user.lowercased().contains(words) }) { item in
+                ForEach(listed) { item in
                     VStack(alignment: .leading, spacing: 4) {
                         Text(item.host).font(.body.weight(.medium))
                         Text(item.user.isEmpty ? "(no user name)" : item.user).foregroundStyle(.secondary)
+                        Text(when(item)).font(.caption).foregroundStyle(.secondary)
                         if let secret = shown[item.id] {
                             HStack {
                                 Text(secret).font(.body.monospaced()).textSelection(.enabled)
@@ -240,22 +248,62 @@ struct PasswordsView: View {
                     .contentShape(Rectangle())
                     .onTapGesture { reveal(item) }
                     .swipeActions {
-                        Button(role: .destructive) {
-                            Vault.forget(host: item.host, user: item.user)
-                            kept = Vault.all()
-                        } label: { Label("Delete", systemImage: "trash") }
+                        // Not role: .destructive, which takes the row away
+                        // before the question is answered.
+                        Button { doomed = item } label: { Label("Delete", systemImage: "trash") }
+                            .tint(.red)
+                    }
+                    .contextMenu {
+                        Button { UIPasteboard.general.string = item.user } label: { Label("Copy User Name", systemImage: "person") }
+                        Button(role: .destructive) { doomed = item } label: { Label("Delete", systemImage: "trash") }
                     }
                 }
                 if kept.isEmpty {
                     Text("Passwords you save in Search, on your Mac or on this phone, are in both through iCloud Keychain.")
                         .foregroundStyle(.secondary)
                 }
+                if site != nil {
+                    Section {
+                        Button("Show All Passwords") { site = nil }
+                    } footer: {
+                        Text("Tap one to see its password. Swipe left to delete it.")
+                    }
+                }
             }
             .searchable(text: $query)
-            .navigationTitle("Passwords")
+            .navigationTitle(site ?? "Passwords")
+            .navigationBarTitleDisplayMode(site == nil ? .automatic : .inline)
             .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() } } }
             .refreshable { kept = Vault.all() }
+            .confirmationDialog(
+                "Delete the password for \(doomed?.user ?? "") at \(doomed?.host ?? "")?",
+                isPresented: Binding(get: { doomed != nil }, set: { if !$0 { doomed = nil } }),
+                titleVisibility: .visible,
+                presenting: doomed
+            ) { item in
+                Button("Delete Password", role: .destructive) { forget(item) }
+            } message: { _ in
+                Text("It goes from Search on this phone and on your Mac.")
+            }
         }
+    }
+
+    /// The site's passwords, or all of them; then what the search field holds.
+    private var listed: [Kept] {
+        let words = query.lowercased()
+        let pool = site.map { site in
+            kept.filter { Vault.registrable($0.host) == site }
+                .sorted { ($0.used ?? .distantPast) > ($1.used ?? .distantPast) }
+        } ?? kept
+        return pool.filter { words.isEmpty || $0.host.contains(words) || $0.user.lowercased().contains(words) }
+    }
+
+    /// When it was last used and saved: what tells two alike apart.
+    private func when(_ item: Kept) -> String {
+        var parts = [item.used.map { "Used \($0.formatted(date: .abbreviated, time: .omitted))" } ?? "Never used"]
+        if let saved = item.saved { parts.append("Saved \(saved.formatted(date: .abbreviated, time: .omitted))") }
+        if item.clear { parts.append("http") }
+        return parts.joined(separator: " · ")
     }
 
     private func reveal(_ item: Kept) {
@@ -264,6 +312,14 @@ struct PasswordsView: View {
             guard ok, let secret = Vault.secret(of: item) else { return }
             shown[item.id] = secret
         }
+    }
+
+    private func forget(_ item: Kept) {
+        Vault.forget(item)
+        browser.forgot(item)
+        shown[item.id] = nil
+        kept = Vault.all()
+        if site != nil, listed.isEmpty { site = nil }
     }
 }
 

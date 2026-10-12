@@ -16,8 +16,12 @@ struct Login: Identifiable, Hashable {
     /// Kept from a page sent in the clear, over plain http. Only these are
     /// offered on such a page, as on the Mac.
     var clear = false
+    /// The keychain's own name for this one item. Two items can share a host
+    /// and a user (one kept over http, one over https), so this is what tells
+    /// them apart.
+    var ref: Data?
 
-    var id: String { host + "\u{1}" + user }
+    var id: String { ref?.base64EncodedString() ?? host + "\u{1}" + user }
 }
 
 /// One item as a list needs it: no secret.
@@ -26,8 +30,11 @@ struct Kept: Identifiable, Hashable {
     var user: String
     var used: Date?
     var clear = false
+    /// When it went into the keychain.
+    var saved: Date?
+    var ref: Data?
 
-    var id: String { host + "\u{1}" + user }
+    var id: String { ref?.base64EncodedString() ?? host + "\u{1}" + user }
 }
 
 enum Vault {
@@ -63,13 +70,23 @@ enum Vault {
             .sorted { ($0.used ?? .distantPast) > ($1.used ?? .distantPast) }
     }
 
+    /// What is kept for a page's site, as the list needs it: the one used
+    /// last first.
+    static func kept(for host: String) -> [Kept] {
+        let site = registrable(host)
+        return all()
+            .filter { registrable($0.host) == site }
+            .sorted { ($0.used ?? .distantPast) > ($1.used ?? .distantPast) }
+    }
+
     static func secret(of kept: Kept) -> String? {
-        secret(host: kept.host, user: kept.user)
+        kept.ref.flatMap(secret(ref:)) ?? secret(host: kept.host, user: kept.user)
     }
 
     private static func rows(_ extra: [String: Any]) -> [[String: Any]] {
         var query = base(extra)
         query[kSecReturnAttributes as String] = true
+        query[kSecReturnPersistentRef as String] = true
         query[kSecMatchLimit as String] = kSecMatchLimitAll
         var out: CFTypeRef?
         guard SecItemCopyMatching(query as CFDictionary, &out) == errSecSuccess,
@@ -89,6 +106,17 @@ enum Vault {
         return String(data: data, encoding: .utf8)
     }
 
+    private static func secret(ref: Data) -> String? {
+        var query = base([kSecValuePersistentRef as String: ref])
+        query[kSecReturnData as String] = true
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
+        var out: CFTypeRef?
+        guard SecItemCopyMatching(query as CFDictionary, &out) == errSecSuccess,
+              let data = out as? Data
+        else { return nil }
+        return String(data: data, encoding: .utf8)
+    }
+
     private static func noted(_ row: [String: Any]) -> (used: Date?, clear: Bool) {
         let used = (row[kSecAttrComment as String] as? String)
             .flatMap(Double.init).map(Date.init(timeIntervalSince1970:))
@@ -98,11 +126,12 @@ enum Vault {
 
     private static func login(from row: [String: Any]) -> Login? {
         guard let host = row[kSecAttrServer as String] as? String,
-              let user = row[kSecAttrAccount as String] as? String,
-              let password = secret(host: host, user: user)
+              let user = row[kSecAttrAccount as String] as? String
         else { return nil }
+        let ref = row[kSecValuePersistentRef as String] as? Data
+        guard let password = ref.flatMap(secret(ref:)) ?? secret(host: host, user: user) else { return nil }
         let (used, clear) = noted(row)
-        return Login(host: host, user: user, password: password, used: used, clear: clear)
+        return Login(host: host, user: user, password: password, used: used, clear: clear, ref: ref)
     }
 
     private static func kept(from row: [String: Any]) -> Kept? {
@@ -110,7 +139,9 @@ enum Vault {
               let user = row[kSecAttrAccount as String] as? String
         else { return nil }
         let (used, clear) = noted(row)
-        return Kept(host: host, user: user, used: used, clear: clear)
+        return Kept(host: host, user: user, used: used, clear: clear,
+                    saved: row[kSecAttrCreationDate as String] as? Date,
+                    ref: row[kSecValuePersistentRef as String] as? Data)
     }
 
     // MARK: - writing
@@ -135,12 +166,23 @@ enum Vault {
         return SecItemAdd(fresh as CFDictionary, nil) == errSecSuccess
     }
 
+    /// Notes the use on this one item. By host and user it would also write
+    /// this password over a second item that shares them.
     static func touch(_ login: Login) {
-        save(host: login.host, user: login.user, password: login.password, used: Date(), clear: login.clear)
+        guard let ref = login.ref else {
+            save(host: login.host, user: login.user, password: login.password, used: Date(), clear: login.clear)
+            return
+        }
+        let used = [kSecAttrComment as String: String(Date().timeIntervalSince1970)]
+        SecItemUpdate(base([kSecValuePersistentRef as String: ref]) as CFDictionary, used as CFDictionary)
     }
 
-    static func forget(host: String, user: String) {
-        SecItemDelete(base([kSecAttrServer as String: host, kSecAttrAccount as String: user]) as CFDictionary)
+    /// Takes away this one item, and only this one: a second item with the
+    /// same host and user stays.
+    static func forget(_ kept: Kept) {
+        let which: [String: Any] = kept.ref.map { [kSecValuePersistentRef as String: $0] }
+            ?? [kSecAttrServer as String: kept.host, kSecAttrAccount as String: kept.user]
+        SecItemDelete(base(which) as CFDictionary)
     }
 
     /// Whether this exact password is already kept for this account.
