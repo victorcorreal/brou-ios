@@ -15,7 +15,7 @@ struct ContentView: View {
             switch sheet {
             case .tabs: TabsView()
             case .bookmarks: BookmarksView()
-            case .passwords: PasswordsView()
+            case .passwords: PasswordsView(site: browser.passwordSite)
             case .settings: SettingsView()
             }
         }
@@ -234,7 +234,7 @@ private struct Sidebar: View {
             ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Button { browser.sheet = .bookmarks } label: { Label("Edit Bookmarks", systemImage: "book") }
-                    Button { browser.sheet = .passwords } label: { Label("Passwords", systemImage: "key") }
+                    Button { browser.showPasswords() } label: { Label("Passwords", systemImage: "key") }
                     Button { browser.sheet = .settings } label: { Label("Settings", systemImage: "gearshape") }
                 } label: {
                     Image(systemName: "ellipsis.circle")

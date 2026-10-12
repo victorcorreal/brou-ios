@@ -8,6 +8,7 @@ La app de Victor que acompaña a su Search para Mac. Comparte por iCloud los fav
 - **Modo lectura solo texto:** el artículo y nada más, con el título una vez.
 - **Favoritos en iCloud:** los mismos registros que Search para Mac (zona `Search`, tipo `Bookmark`).
 - **Contraseñas en el llavero de iCloud:** el mismo grupo que el Mac. Ofrece guardarlas al enviar un formulario, las rellena con un toque y las muestra con Face ID.
+- **Contraseñas de la web abierta:** la llave de la barra de acceso abre solo las cuentas de esa web, con cuándo se usó y se guardó cada una. Deslizar a la izquierda borra esa cuenta y ninguna más. "Show All Passwords" vuelve a la lista entera.
 - **Diseño:** en iPhone (y el Duo plegado), página a pantalla completa con la barra abajo. En iPad (y el Duo abierto), barra lateral con pestañas y favoritos.
 
 Todo lo que comparte con el Mac está descrito en `SINCRONIZACION.md`, en la carpeta `Mac/Search` de Vcode.
@@ -39,7 +40,7 @@ Firma con el equipo Great Heights Systems S.L. (`E653G759EN`). Instalada así, d
 
 ## Probado
 
-En el simulador iPhone 18 Pro (iOS 27.0): sesión restaurada con tres pestañas, páginas oscuras con fotos en su color y la zona de la hora en negro, modo lectura solo texto, añadir favorito, cambiar de pestaña, guardar una contraseña al enviar un formulario y rellenarla después. En el iPad Pro 11" (M5): barra lateral con pestañas y favoritos.
+En el simulador iPhone 18 Pro (iOS 27.0): sesión restaurada con tres pestañas, páginas oscuras con fotos en su color y la zona de la hora en negro, modo lectura solo texto, añadir favorito, cambiar de pestaña, guardar una contraseña al enviar un formulario y rellenarla después. Las contraseñas de la web abierta (12-oct-2026): con dos cuentas en `localhost` y otra en `127.0.0.1` cuyo usuario contiene "localhost", la llave muestra solo las dos primeras, borra una sin tocar la otra y la barra deja de ofrecerla. En el iPad Pro 11" (M5): barra lateral con pestañas y favoritos.
 
 No se puede probar en el simulador: la sincronización con iCloud, porque el simulador no tiene cuenta. Se prueba con tu iPhone y tu Mac.
 

@@ -27,6 +27,8 @@ final class Browser: ObservableObject {
         var id: String { rawValue }
     }
     @Published var sheet: Sheet?
+    /// The site whose passwords the sheet shows; nil for all of them.
+    @Published var passwordSite: String?
 
     /// Logins for the sign-in box the page has just touched.
     @Published var offered: [Login] = []
@@ -143,6 +145,19 @@ final class Browser: ObservableObject {
     func fill(_ login: Login) {
         active?.fill(login)
         offered = []
+    }
+
+    /// The passwords sheet: only the page's site when something is kept for
+    /// it, everything otherwise.
+    func showPasswords() {
+        let host = active?.url?.host()
+        passwordSite = host.flatMap { Vault.kept(for: $0).isEmpty ? nil : Vault.registrable($0) }
+        sheet = .passwords
+    }
+
+    /// A password just deleted is no longer offered.
+    func forgot(_ kept: Kept) {
+        offered.removeAll { $0.id == kept.id }
     }
 
     func offerToKeep(user: String, password: String, from tab: Tab) {

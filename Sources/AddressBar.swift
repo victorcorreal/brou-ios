@@ -113,18 +113,20 @@ struct Suggestions: View {
     }
 }
 
-/// The logins kept for the site whose sign-in box was just touched.
+/// The logins kept for the site whose sign-in box was just touched. The key
+/// opens them in the passwords sheet, to see or delete one.
 struct LoginStrip: View {
     @EnvironmentObject var browser: Browser
 
     var body: some View {
         if !browser.offered.isEmpty {
             HStack(spacing: 8) {
-                Image(systemName: "key.fill").foregroundStyle(.secondary)
+                Button { browser.showPasswords() } label: { Image(systemName: "key.fill") }
+                    .accessibilityLabel("Passwords for This Site")
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(browser.offered) { login in
-                            Button(login.user.isEmpty ? login.host : login.user) { browser.fill(login) }
+                            Button(name(of: login)) { browser.fill(login) }
                                 .buttonStyle(.bordered)
                                 .buttonBorderShape(.capsule)
                         }
@@ -138,6 +140,13 @@ struct LoginStrip: View {
             .padding(.vertical, 8)
             .background(.bar)
         }
+    }
+
+    /// The user name; with the host too when another login has the same one.
+    private func name(of login: Login) -> String {
+        guard !login.user.isEmpty else { return login.host }
+        let twins = browser.offered.filter { $0.user == login.user }
+        return twins.count > 1 && Set(twins.map(\.host)).count > 1 ? "\(login.user) · \(login.host)" : login.user
     }
 }
 
@@ -174,7 +183,7 @@ struct PageMenu: View {
                 }
             }
             Divider()
-            Button { browser.sheet = .passwords } label: { Label("Passwords", systemImage: "key") }
+            Button { browser.showPasswords() } label: { Label("Passwords", systemImage: "key") }
             Button { browser.sheet = .settings } label: { Label("Settings", systemImage: "gearshape") }
         } label: {
             Image(systemName: "ellipsis.circle")
