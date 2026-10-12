@@ -30,6 +30,12 @@ targets:
         NSAppTransportSecurity:
           NSAllowsArbitraryLoadsInWebContent: true
           NSAllowsLocalNetworking: true
+        # Apple asks a browser to claim web links before it can be the
+        # default one, and only the default browser opens Home Screen bookmarks.
+        CFBundleURLTypes:
+          - CFBundleURLName: cat.correal.search.web
+            CFBundleTypeRole: Viewer
+            CFBundleURLSchemes: [http, https]
     entitlements:
       path: Search.entitlements
       properties:

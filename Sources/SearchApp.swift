@@ -11,6 +11,7 @@ struct SearchApp: App {
                 .environmentObject(browser)
                 .environmentObject(browser.bookmarks)
                 .environmentObject(browser.history)
+                .onOpenURL { browser.open($0) }
         }
         .onChange(of: phase) { _, now in
             if now == .background { browser.saveSession() }

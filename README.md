@@ -9,6 +9,7 @@ La app de Victor que acompaña a su Search para Mac. Comparte por iCloud los fav
 - **Favoritos en iCloud:** los mismos registros que Search para Mac (zona `Search`, tipo `Bookmark`).
 - **Contraseñas en el llavero de iCloud:** el mismo grupo que el Mac. Ofrece guardarlas al enviar un formulario, las rellena con un toque y las muestra con Face ID.
 - **Contraseñas de la web abierta:** la llave de la barra de acceso abre solo las cuentas de esa web, con cuándo se usó y se guardó cada una. Deslizar a la izquierda borra esa cuenta y ninguna más. "Show All Passwords" vuelve a la lista entera.
+- **Añadir a pantalla de inicio:** "Share" pasa la página entera al menú de compartir de iOS, como Chrome. iOS ofrece entonces "Add to Home Screen", con el icono y el nombre de la web. Solo aparece cuando Search tiene el permiso de navegador de Apple (`com.apple.developer.web-browser`), que hay que pedir a Apple. Con ese permiso, Search también puede ser el navegador predeterminado: los enlaces de otras apps se abren en Search, y un icono guardado sin "Open as Web App" abre su web en Search.
 - **Diseño:** en iPhone (y el Duo plegado), página a pantalla completa con la barra abajo. En iPad (y el Duo abierto), barra lateral con pestañas y favoritos.
 
 Todo lo que comparte con el Mac está descrito en `SINCRONIZACION.md`, en la carpeta `Mac/Search` de Vcode.
