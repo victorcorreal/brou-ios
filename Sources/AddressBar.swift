@@ -174,7 +174,7 @@ struct PageMenu: View {
                     Label(bookmarks.contains(url) ? "Remove Bookmark" : "Add Bookmark",
                           systemImage: bookmarks.contains(url) ? "bookmark.slash" : "bookmark")
                 }
-                ShareLink(item: url) { Label("Share", systemImage: "square.and.arrow.up") }
+                Button { share(url) } label: { Label("Share", systemImage: "square.and.arrow.up") }
                 Button {
                     UIPasteboard.general.url = url
                     browser.say("Address copied")
@@ -189,5 +189,38 @@ struct PageMenu: View {
             Image(systemName: "ellipsis.circle")
         }
         .accessibilityLabel("Page")
+        .background(AnchorView(anchor: anchor))
     }
+
+    @State private var anchor = Anchor()
+
+    /// The system's share sheet, with the page itself among what it gets: with
+    /// Apple's browser entitlement, iOS then offers Add to Home Screen.
+    private func share(_ url: URL) {
+        guard let view = anchor.view else { return }
+        var top = view.window?.rootViewController
+        while let next = top?.presentedViewController { top = next }
+        let sheet = UIActivityViewController(activityItems: [url, tab.web], applicationActivities: nil)
+        sheet.popoverPresentationController?.sourceView = view
+        sheet.popoverPresentationController?.sourceRect = view.bounds
+        top?.present(sheet, animated: true)
+    }
+}
+
+/// Where the share sheet comes from: on the iPad, it points at the menu.
+private final class Anchor {
+    weak var view: UIView?
+}
+
+private struct AnchorView: UIViewRepresentable {
+    let anchor: Anchor
+
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        view.isUserInteractionEnabled = false
+        anchor.view = view
+        return view
+    }
+
+    func updateUIView(_ view: UIView, context: Context) {}
 }

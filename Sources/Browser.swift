@@ -78,6 +78,16 @@ final class Browser: ObservableObject {
         return tab
     }
 
+    /// A link from another app, or a Home Screen bookmark, once Search is the
+    /// default browser: the tab that already shows it, the empty one in
+    /// front, or a new one.
+    func open(_ url: URL) {
+        guard ["http", "https"].contains(url.scheme?.lowercased() ?? "") else { return }
+        sheet = nil
+        if let showing = tabs.first(where: { $0.url == url }) { return select(showing) }
+        if let tab = active, tab.isBlank { tab.go(to: url) } else { newTab(url) }
+    }
+
     func select(_ tab: Tab) {
         activeID = tab.id
         offered = []
