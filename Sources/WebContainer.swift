@@ -5,19 +5,40 @@ import WebKit
 /// active, so switching tabs keeps every page as it was.
 struct WebContainer: UIViewRepresentable {
     let tab: Tab
+    /// Given as a value, not read from the tab: a change of colour is a
+    /// change of this view, and SwiftUI then updates it.
+    let band: UIColor
 
-    func makeUIView(context: Context) -> UIView {
-        let view = UIView()
+    /// The page goes on under the clock, so a dark page doesn't end in a
+    /// white band; the band over it there is the page's colour, as in
+    /// Safari, so what scrolls up passes under the clock and never shows
+    /// over a page's own bar held at the top.
+    final class Holder: UIView {
+        let band = UIView()
+    }
+
+    func makeUIView(context: Context) -> Holder {
+        let view = Holder()
         view.backgroundColor = .systemBackground
+        view.band.isUserInteractionEnabled = false
+        view.band.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(view.band)
+        NSLayoutConstraint.activate([
+            view.band.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            view.band.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            view.band.topAnchor.constraint(equalTo: view.topAnchor),
+            view.band.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+        ])
         return view
     }
 
-    func updateUIView(_ view: UIView, context: Context) {
+    func updateUIView(_ view: Holder, context: Context) {
+        view.band.backgroundColor = band
         guard tab.web.superview !== view else { return }
-        view.subviews.forEach { $0.removeFromSuperview() }
+        view.subviews.filter { $0 !== view.band }.forEach { $0.removeFromSuperview() }
         tab.web.removeFromSuperview()
         tab.web.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(tab.web)
+        view.insertSubview(tab.web, belowSubview: view.band)
         NSLayoutConstraint.activate([
             tab.web.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tab.web.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -117,7 +138,7 @@ struct PageArea: View {
     var body: some View {
         ZStack {
             // Under the clock too: a dark page shouldn't end in a white band.
-            WebContainer(tab: tab).ignoresSafeArea(edges: .top)
+            WebContainer(tab: tab, band: tab.isBlank ? .clear : tab.shade ?? .systemBackground).ignoresSafeArea(edges: .top)
             if tab.isBlank { BlankPage(typing: $typing, focused: $focused) }
         }
     }
