@@ -12,7 +12,7 @@ The status area remains opaque: scrolling text and images do not overlap the clo
 - `Tests/TopColorHarness.swift`: **7 checks passed** in macOS WebKit, with local HTML/CSS and a nonpersistent data store. Covers a grey normal header over a black root, a differently coloured central button, dynamic header colours, sticky and scrolling headers, light/dark style changes and suppression of duplicate messages.
 - The same fixture fails with the previous script: it reports black instead of the visible grey header. This reproduces the colour-selection regression without accessing a personal account.
 - The fixture window stays off screen. Its test-only animation-frame driver uses timers because off-screen WebKit suspends animation frames. These checks exercise DOM/CSS colour sampling; they do not verify iPhone safe-area layout or frame scheduling.
-- Physical confirmation on the reported Google page remains pending. The clock, status icons, scrolling, tab switches, Dark Pages toggles and light pages should be checked on the installed build. iCloud and passwords are outside this change.
+- Victor confirmed on the physical iPhone that the reported Google page now continues its grey background behind the clock without the black strip (build `1792583760`, 21 October 2026). Tab switches, Dark Pages toggles and light-page status-icon contrast have not been manually revalidated. iCloud and passwords are outside this change.
 
 ## Run the regression checks on Mac
 
