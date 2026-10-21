@@ -1,0 +1,36 @@
+name: Build and test
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  iphone:
+    runs-on: macos-26
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Build without signing material
+        run: >-
+          xcodebuild -project Search.xcodeproj -scheme Search
+          -configuration Debug -sdk iphonesimulator
+          -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath build/Simulator
+          CODE_SIGNING_ALLOWED=NO DEVELOPMENT_TEAM= build
+      - name: Synthetic Vault and WebKit regressions
+        run: python3 Tests/UpstreamRegression/run.py
+      - name: Page colour regression
+        run: |
+          swiftc Sources/Scripts.swift Tests/TopColorHarness.swift -o build/top-colour
+          build/top-colour

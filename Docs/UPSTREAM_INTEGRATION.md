@@ -32,3 +32,7 @@ El build de simulador y el archivo Release para dispositivo se han completado. E
 Las pruebas del Vault verifican consultas y selección de referencias con un adaptador, no el llavero real de iOS. El WebKit de macOS permite verificar el JavaScript compartido, pero no sustituye una comprobación de interfaz en un iPhone. Esta actualización no se ha instalado todavía en el teléfono. Falta repetir el flujo entre Mac e iPhone, cambios sin conexión, conflictos, borrados y cambios de cuenta. No afirmar que estas comprobaciones acreditan la sincronización de iCloud.
 
 No cambian las pantallas iniciales aprobadas, el foco del buscador ni el menú inferior. No se han publicado versiones, cambiado la visibilidad del repositorio ni enviado solicitudes externas.
+
+## Later device verification
+
+The basic physical Mac/iPhone journeys were subsequently checked on 21 October 2026; see [VERIFICATION.md](VERIFICATION.md). Earlier statements above about untested cross-device sync describe the integration stage. Offline/conflict/account-switch coverage remains pending.

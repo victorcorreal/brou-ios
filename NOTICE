@@ -4,19 +4,24 @@ Brou for iPhone and iPad
 Brou is maintained by Victor Correal and has its own product name and icon.
 The original Search attribution and license are retained below.
 
-Part of the JavaScript in this app comes from Search, a WebKit browser
-for macOS by Office Commun (https://github.com/driceroland/Search), released
-under the MIT License. It was taken from Victor Correal's own build of Search
-(private repository victorcorreal/search, commit 7689f1f, 10 October 2026):
+This companion app reuses and adapts native Swift and JavaScript from Search by
+Office Commun (https://github.com/driceroland/Search), MIT-licensed, through
+Victor Correal's maintained Mac variant (https://github.com/victorcorreal/search).
+The original authors and available history are retained; this is not an
+Office Commun distribution.
 
-  Shared (Extension)/Resources/dark.js       from Sources/Search/DarkPages.swift (DarkPages.script)
-  Shared (Extension)/Resources/reader.js     from Sources/Search/Reader.swift (Reader.script)
-  Shared (Extension)/Resources/text-only.js  from Sources/Search/ReaderText.swift (Reader.textOnlyScript)
-  Tests/pages.py                             test pages from Tests/dark_pages.py
+Current mappings include:
+  Resources/JS/dark.js       from Mac DarkPages.swift
+  Resources/JS/reader.js     from Mac Reader.swift
+  Resources/JS/text-only.js  from Mac ReaderText.swift
+  Sources/CloudSync.swift    shared bookmark synchronization added in the variant
+  Sources/Forms.swift        adapted form detection/fill from Mac Forms.swift
+  Sources/Shield.swift       adapted WebKit content blocker from Mac Shield.swift
 
-The code is unchanged apart from the identifiers it leaves on a page
-(element ids, a data attribute and a window property), renamed so that they
-carry no other product's name.
+Dark Pages, text-only reading and CloudKit/keychain continuity were developed
+in the maintained variant. Earlier extension paths in this file described a
+previous layout. See Docs/UPSTREAM_INTEGRATION.md for selected upstream fixes
+and Brand/README.md for the independent Brou artwork.
 
 Original notice:
 

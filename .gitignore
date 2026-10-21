@@ -3,3 +3,17 @@ build/
 xcuserdata/
 .DS_Store
 DerivedData/
+
+# Private signing, local configuration and user exports
+*.p12
+*.p8
+*.key
+*.pem
+*.cer
+*.provisionprofile
+*.mobileprovision
+.env
+.env.*
+!.env.example
+*.local.xcconfig
+LocalSigning/
