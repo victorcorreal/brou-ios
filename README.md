@@ -1,15 +1,15 @@
-# Search para iPhone, iPad y iPhone Duo
+# Brou para iPhone y iPad
 
-La app de Victor que acompaña a su Search para Mac. Comparte por iCloud los favoritos y las contraseñas.
+La app de Victor Correal que acompaña a Brou para Mac. Comparte por iCloud los favoritos y las contraseñas.
 
 - **Navegar:** un campo para direcciones o búsquedas (Google), sin texto de ejemplo. Pestañas, atrás y adelante (también deslizando), recargar, compartir y copiar la dirección.
 - **Bloqueador de anuncios:** el mismo del Mac, compilado dentro de WebKit.
 - **Páginas oscuras:** cualquier web clara en oscuro, con fotos y vídeos en su color, como en el Mac.
 - **Modo lectura solo texto:** el artículo y nada más, con el título una vez.
-- **Favoritos en iCloud:** los mismos registros que Search para Mac (zona `Search`, tipo `Bookmark`).
+- **Favoritos en iCloud:** los mismos registros que Brou para Mac (zona `Search`, tipo `Bookmark`).
 - **Contraseñas en el llavero de iCloud:** el mismo grupo que el Mac. Ofrece guardarlas al enviar un formulario, las rellena con un toque y las muestra con Face ID.
 - **Contraseñas de la web abierta:** la llave de la barra de acceso abre solo las cuentas de esa web, con cuándo se usó y se guardó cada una. Deslizar a la izquierda borra esa cuenta y ninguna más. "Show All Passwords" vuelve a la lista entera.
-- **Navegador predeterminado y pantalla de inicio:** desde la versión 1.0.1, Search incluye el permiso de navegador de Apple (`com.apple.developer.web-browser`), aprobado para `cat.correal.search` el 20 de octubre de 2026. Puedes elegir Search como navegador predeterminado en Ajustes. "Share" entrega la página al menú de compartir de iOS, que ofrece "Add to Home Screen", con el icono y el nombre de la web. Un icono guardado sin "Open as Web App" abre su web en el navegador predeterminado que hayas elegido.
+- **Navegador predeterminado y pantalla de inicio:** desde la versión 1.0.1, la app incluye el permiso de navegador de Apple (`com.apple.developer.web-browser`), aprobado para `cat.correal.search` el 20 de octubre de 2026. Puedes elegir Brou como navegador predeterminado en Ajustes. "Share" entrega la página al menú de compartir de iOS, que ofrece "Add to Home Screen", con el icono y el nombre de la web. Un icono guardado sin "Open as Web App" abre su web en el navegador predeterminado que hayas elegido.
 - **Diseño:** en iPhone (y el Duo plegado), página a pantalla completa con la barra abajo. En iPad (y el Duo abierto), barra lateral con pestañas y favoritos.
 
 Todo lo que comparte con el Mac está descrito en `SINCRONIZACION.md`, en la carpeta `Mac/Search` de Vcode.
@@ -24,10 +24,10 @@ Después, en Xcode, elige el esquema **Search** y tu iPhone o iPad, y pulsa ⌘R
 
 ```bash
 xcodebuild -project Search.xcodeproj -scheme Search -destination 'id=<UDID>' -allowProvisioningUpdates build
-xcrun devicectl device install app --device <UDID> <ruta a Search.app>
+xcrun devicectl device install app --device <UDID> <ruta a Brou.app>
 ```
 
-Firma con el equipo Great Heights Systems S.L. (`E653G759EN`). Instalada así, dura un año. No está en la App Store: el nombre "Search" es de Office Commun.
+Firma con el equipo Great Heights Systems S.L. (`E653G759EN`). Instalada así, dura un año. La distribución pública y el nombre en App Store Connect se preparan por separado. Brou tiene nombre e icono propios.
 
 ### Firma y permiso de navegador
 
@@ -37,7 +37,13 @@ La aprobación de Apple permite usar la capacidad, pero el perfil de firma tambi
 
 Con otro equipo de Apple, necesitas tus propios identificadores, contenedor y grupo de llavero, además de solicitar a Apple el permiso de navegador. Esta aprobación no se transfiere a otra cuenta. Los datos de iCloud y las contraseñas de nuestro equipo tampoco son accesibles desde una compilación de otro equipo.
 
-Este permiso habilita la elección de navegador y la acción de pantalla de inicio. Las contraseñas propias de Search usan el grupo de llavero compartido; el permiso de navegador no da acceso general a la base de datos de la app Contraseñas de Apple. El permiso de passkeys para navegadores de Mac es otra capacidad.
+Este permiso habilita la elección de navegador y la acción de pantalla de inicio. Las contraseñas propias de Brou usan el grupo de llavero compartido; el permiso de navegador no da acceso general a la base de datos de la app Contraseñas de Apple. El permiso de passkeys para navegadores de Mac es otra capacidad.
+
+## Brou 1.1.0 — 21 de octubre de 2026
+
+Nombre visible, nombre del ejecutable e icono propios. El icono usa el mismo original que la app para Mac; véase [Brand/README.md](Brand/README.md). Se conservan `cat.correal.search`, el contenedor y la zona de CloudKit, el grupo y la etiqueta de las contraseñas y la carpeta de datos local. El permiso de navegador aprobado sigue incluido. No se desinstala la versión anterior para actualizar.
+
+El proyecto, el esquema y el target siguen llamándose `Search` para conservar las instrucciones de compilación y facilitar el mantenimiento. La app compilada se llama `Brou.app`.
 
 ## Versión 1.0.1 — 21 de octubre de 2026
 
