@@ -45,7 +45,14 @@ Este permiso habilita la elección de navegador y la acción de pantalla de inic
 - Mantiene el identificador, el contenedor de iCloud, el grupo de contraseñas y el entorno CloudKit Development.
 - El plist generado toma la versión y el número de compilación de `MARKETING_VERSION` y `CURRENT_PROJECT_VERSION`, sin valores antiguos que los oculten.
 
-Compilación `1792569136`: archivo Release y exportación IPA de desarrollo completados. Firma y perfil verificados con la capacidad nueva y las identidades existentes. Instalada sobre la versión 1.0 en el iPhone 16 Pro; los tres archivos de datos locales conservan el mismo contenido tras actualizar. El arranque y la comprobación de las dos opciones en la interfaz quedan pendientes de desbloquear el dispositivo. Esta comprobación no vuelve a validar la sincronización entre dispositivos.
+Verificación de la compilación `1792569136`:
+
+- Archivo Release y exportación IPA de desarrollo completados; firma, perfil, capacidad nueva e identidades existentes verificados.
+- Instalada sobre la versión 1.0 en el iPhone 16 Pro. Los tres archivos de datos locales conservan el mismo contenido tras actualizar.
+- Arranque confirmado en el iPhone; el proceso permanece activo.
+- Víctor ha comprobado en el dispositivo que «Añadir a pantalla de inicio» aparece en Compartir y que Search figura en Ajustes entre los navegadores predeterminados.
+
+Estas comprobaciones no incluyen crear y abrir un acceso de pantalla de inicio, cambiar el navegador predeterminado ni volver a validar la sincronización entre dispositivos.
 
 Los archivos de desarrollo están en `build/` y solo sirven en dispositivos registrados en su perfil. No son una publicación de TestFlight o App Store. El código y las notas no incluyen perfiles, certificados ni copias de datos personales.
 
