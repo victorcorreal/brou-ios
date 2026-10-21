@@ -55,7 +55,9 @@ final class Browser: ObservableObject {
         textOnly = Store.settings.object(forKey: "reader.textOnly") as? Bool ?? true
         Shield.shared.compile()
         restoreSession()
-        if tabs.isEmpty { newTab() }
+        // Start with bookmarks; keep the prior session's pages in their tabs.
+        if let blank = tabs.last(where: \.isBlank) { activeID = blank.id }
+        else { newTab() }
     }
 
     // MARK: - tabs
