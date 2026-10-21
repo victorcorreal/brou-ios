@@ -23,9 +23,9 @@ enum Scripts {
     static let readerAfter = load("reader-after")
 
     /// The colour at the top of the page, for the band under the clock: a
-    /// bar the page holds there (position fixed or sticky), or else the
-    /// page's own background. Said again only when it changes: on load, on
-    /// scroll, on a turn of the phone, and back on a page kept in memory.
+    /// visible background at its upper edge, including normal and sticky
+    /// headers. Samples rendered CSS after Dark Pages, not theme metadata.
+    /// Reports changes on load, scroll, appearance changes and restoration.
     static let top = #"""
     (function () {
       if (window.__searchTop) return;
@@ -41,19 +41,21 @@ enum Scripts {
         }
         return '';
       }
-      function held(el) {
-        for (; el && el.nodeType === 1; el = el.parentElement) {
-          var p = getComputedStyle(el).position;
-          if ((p === 'fixed' || p === 'sticky') && el.getBoundingClientRect().top <= 1) return true;
-        }
-        return false;
-      }
       function colour() {
-        var at = document.elementFromPoint(innerWidth / 2, 1);
-        if (held(at)) { var bar = behind(at); if (bar) return bar; }
+        // A logo or sign-in button can occupy the centre. Prefer the colour
+        // shared by multiple points across the top; the centre wins ties.
+        var colours = [0.5, 0.12, 0.88].map(function (x) {
+          return behind(document.elementFromPoint(innerWidth * x, 1));
+        }).filter(Boolean);
+        if (colours.length) {
+          return colours.reduce(function (best, c) {
+            var count = function (value) { return colours.filter(function (v) { return v === value; }).length; };
+            return count(c) > count(best) ? c : best;
+          });
+        }
         var root = document.documentElement;
-        return opaque(getComputedStyle(root).backgroundColor) ||
-          opaque(document.body ? getComputedStyle(document.body).backgroundColor : '') ||
+        return opaque(document.body ? getComputedStyle(document.body).backgroundColor : '') ||
+          opaque(getComputedStyle(root).backgroundColor) ||
           (/dark/.test(getComputedStyle(root).colorScheme || '') && matchMedia('(prefers-color-scheme: dark)').matches
             ? 'rgb(0,0,0)' : 'rgb(255,255,255)');
       }
@@ -68,7 +70,15 @@ enum Scripts {
       function soon() { if (!queued) { queued = true; requestAnimationFrame(say); } }
       addEventListener('scroll', soon, { passive: true });
       addEventListener('resize', soon);
-      addEventListener('load', soon);
+      addEventListener('load', soon, true);
+      addEventListener('search-top-refresh', soon);
+      matchMedia('(prefers-color-scheme: dark)').addEventListener('change', soon);
+      // Covers SPA headers and the styles installed/removed by Dark Pages.
+      // One sample per frame at most, and no message if the colour is equal.
+      new MutationObserver(soon).observe(document.documentElement, {
+        childList: true, subtree: true, attributes: true,
+        attributeFilter: ['class', 'style', 'media', 'href']
+      });
       // Back to a page kept in memory: no script runs again, so say it anew.
       addEventListener('pageshow', function () { last = ''; soon(); });
       soon();
