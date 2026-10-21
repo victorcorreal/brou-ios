@@ -8,6 +8,7 @@ La app de Victor Correal que acompaña a Brou para Mac. Comparte por iCloud los 
 - **Modo lectura solo texto:** el artículo y nada más, con el título una vez.
 - **Favoritos en iCloud:** los mismos registros que Brou para Mac (zona `Search`, tipo `Bookmark`).
 - **Contraseñas en el llavero de iCloud:** el mismo grupo que el Mac. Ofrece guardarlas al enviar un formulario, las rellena con un toque y las muestra con Face ID.
+- **Filtro por subdominio:** las sugerencias y la llave de la barra muestran solo las cuentas del host abierto. `cms`, `dev` y el dominio principal se mantienen separados. Si no hay cuentas para ese host, la lista queda vacía; "Show All Passwords" permite verlas todas. Se conserva la equivalencia histórica entre `www` y el dominio sin `www`.
 - **Contraseñas de la web abierta:** la llave de la barra de acceso abre solo las cuentas de esa web, con cuándo se usó y se guardó cada una. Deslizar a la izquierda borra esa cuenta y ninguna más. "Show All Passwords" vuelve a la lista entera.
 - **Navegador predeterminado y pantalla de inicio:** desde la versión 1.0.1, la app incluye el permiso de navegador de Apple (`com.apple.developer.web-browser`), aprobado para `cat.correal.search` el 20 de octubre de 2026. Puedes elegir Brou como navegador predeterminado en Ajustes. "Share" entrega la página al menú de compartir de iOS, que ofrece "Add to Home Screen", con el icono y el nombre de la web. Un icono guardado sin "Open as Web App" abre su web en el navegador predeterminado que hayas elegido.
 - **Diseño:** en iPhone (y el Duo plegado), página a pantalla completa con la barra abajo. En iPad (y el Duo abierto), barra lateral con pestañas y favoritos.
@@ -81,3 +82,5 @@ No se puede probar en el simulador: la sincronización con iCloud, porque el sim
 ## Licencia
 
 Parte del código viene de Search, de Office Commun, con licencia MIT. Detalle en `NOTICE` y `LICENSE`.
+
+[Password host-scope verification](Docs/PASSWORD_HOST_SCOPE.md).

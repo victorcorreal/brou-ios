@@ -258,7 +258,10 @@ struct PasswordsView: View {
                         Button(role: .destructive) { doomed = item } label: { Label("Delete", systemImage: "trash") }
                     }
                 }
-                if kept.isEmpty {
+                if let site, listed.isEmpty {
+                    Text("No matching passwords for \(site).")
+                        .foregroundStyle(.secondary)
+                } else if kept.isEmpty {
                     Text("Passwords you save in Brou, on your Mac or on this phone, are in both through iCloud Keychain.")
                         .foregroundStyle(.secondary)
                 }
@@ -292,7 +295,7 @@ struct PasswordsView: View {
     private var listed: [Kept] {
         let words = query.lowercased()
         let pool = site.map { site in
-            kept.filter { Vault.registrable($0.host) == site }
+            kept.filter { $0.host == site }
                 .sorted { ($0.used ?? .distantPast) > ($1.used ?? .distantPast) }
         } ?? kept
         return pool.filter { words.isEmpty || $0.host.contains(words) || $0.user.lowercased().contains(words) }

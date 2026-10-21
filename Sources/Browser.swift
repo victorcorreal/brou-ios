@@ -157,11 +157,11 @@ final class Browser: ObservableObject {
         offered = []
     }
 
-    /// The passwords sheet: only the page's site when something is kept for
-    /// it, everything otherwise.
+    /// The page host stays selected even when it has no saved account.
+    /// The explicit Show All action opens the full vault.
     func showPasswords() {
         let host = active?.url?.host()
-        passwordSite = host.flatMap { Vault.kept(for: $0).isEmpty ? nil : Vault.registrable($0) }
+        passwordSite = host.map(Vault.passwordHost)
         sheet = .passwords
     }
 

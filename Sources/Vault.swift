@@ -59,12 +59,9 @@ enum Vault {
             .sorted { $0.host == $1.host ? $0.user < $1.user : $0.host < $1.host }
     }
 
-    /// What is kept for a page's host: the host itself and the rest of its
-    /// site (accounts.example.com for example.com and the other way round).
+    /// Only the page's host; parent, sibling and child subdomains stay out.
     static func logins(for host: String, clear: Bool) -> [Login] {
-        let site = registrable(host)
-        return rows([:])
-            .filter { ($0[kSecAttrServer as String] as? String).map { registrable($0) == site } ?? false }
+        return rows([kSecAttrServer as String: passwordHost(host)])
             .compactMap(login(from:))
             .filter { !clear || $0.clear }
             .sorted { ($0.used ?? .distantPast) > ($1.used ?? .distantPast) }
@@ -73,9 +70,9 @@ enum Vault {
     /// What is kept for a page's site, as the list needs it: the one used
     /// last first.
     static func kept(for host: String) -> [Kept] {
-        let site = registrable(host)
+        let site = passwordHost(host)
         return all()
-            .filter { registrable($0.host) == site }
+            .filter { $0.host == site }
             .sorted { ($0.used ?? .distantPast) > ($1.used ?? .distantPast) }
     }
 
@@ -216,6 +213,12 @@ enum Vault {
         context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { ok, _ in
             DispatchQueue.main.async { done(ok) }
         }
+    }
+
+    /// Keep the same www alias used when saving; other subdomains differ.
+    static func passwordHost(_ host: String) -> String {
+        let name = host.lowercased()
+        return name.hasPrefix("www.") ? String(name.dropFirst(4)) : name
     }
 
     // MARK: - the site behind a host
