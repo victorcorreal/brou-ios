@@ -11,8 +11,8 @@ settings:
   base:
     DEVELOPMENT_TEAM: E653G759EN
     CODE_SIGN_STYLE: Automatic
-    MARKETING_VERSION: "1.0"
-    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "1.0.1"
+    CURRENT_PROJECT_VERSION: "1792569136"
     SWIFT_VERSION: "5.0"
     TARGETED_DEVICE_FAMILY: "1,2"
 targets:
@@ -26,6 +26,8 @@ targets:
     info:
       path: Info.plist
       properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         # A browser goes wherever it is pointed, plain http included.
         NSAppTransportSecurity:
           NSAllowsArbitraryLoadsInWebContent: true
@@ -39,6 +41,8 @@ targets:
     entitlements:
       path: Search.entitlements
       properties:
+        # Approved by Apple for cat.correal.search on 20 October 2026.
+        com.apple.developer.web-browser: true
         # The same container and keychain group as Search for Mac
         # (see SINCRONIZACION.md in Victor's Mac/Search folder).
         com.apple.developer.icloud-container-identifiers: [iCloud.cat.correal.search]

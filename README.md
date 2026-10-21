@@ -9,7 +9,7 @@ La app de Victor que acompaña a su Search para Mac. Comparte por iCloud los fav
 - **Favoritos en iCloud:** los mismos registros que Search para Mac (zona `Search`, tipo `Bookmark`).
 - **Contraseñas en el llavero de iCloud:** el mismo grupo que el Mac. Ofrece guardarlas al enviar un formulario, las rellena con un toque y las muestra con Face ID.
 - **Contraseñas de la web abierta:** la llave de la barra de acceso abre solo las cuentas de esa web, con cuándo se usó y se guardó cada una. Deslizar a la izquierda borra esa cuenta y ninguna más. "Show All Passwords" vuelve a la lista entera.
-- **Añadir a pantalla de inicio:** "Share" pasa la página entera al menú de compartir de iOS, como Chrome. iOS ofrece entonces "Add to Home Screen", con el icono y el nombre de la web. Solo aparece cuando Search tiene el permiso de navegador de Apple (`com.apple.developer.web-browser`), que hay que pedir a Apple. Con ese permiso, Search también puede ser el navegador predeterminado: los enlaces de otras apps se abren en Search, y un icono guardado sin "Open as Web App" abre su web en Search.
+- **Navegador predeterminado y pantalla de inicio:** desde la versión 1.0.1, Search incluye el permiso de navegador de Apple (`com.apple.developer.web-browser`), aprobado para `cat.correal.search` el 20 de octubre de 2026. Puedes elegir Search como navegador predeterminado en Ajustes. "Share" entrega la página al menú de compartir de iOS, que ofrece "Add to Home Screen", con el icono y el nombre de la web. Un icono guardado sin "Open as Web App" abre su web en el navegador predeterminado que hayas elegido.
 - **Diseño:** en iPhone (y el Duo plegado), página a pantalla completa con la barra abajo. En iPad (y el Duo abierto), barra lateral con pestañas y favoritos.
 
 Todo lo que comparte con el Mac está descrito en `SINCRONIZACION.md`, en la carpeta `Mac/Search` de Vcode.
@@ -28,6 +28,33 @@ xcrun devicectl device install app --device <UDID> <ruta a Search.app>
 ```
 
 Firma con el equipo Great Heights Systems S.L. (`E653G759EN`). Instalada así, dura un año. No está en la App Store: el nombre "Search" es de Office Commun.
+
+### Firma y permiso de navegador
+
+El identificador sigue siendo `cat.correal.search`. El contenedor `iCloud.cat.correal.search` y el grupo de llavero compartido tampoco cambian. Para actualizar, instala la nueva compilación sobre la anterior, sin desinstalarla.
+
+La aprobación de Apple permite usar la capacidad, pero el perfil de firma también debe incluirla. En Xcode, abre el target Search → Signing & Capabilities, comprueba el equipo, la firma automática y la capacidad **Default Web Browser**. Deja que Xcode actualice el perfil antes de compilar. La firma del ejecutable y el perfil deben contener `com.apple.developer.web-browser = true`.
+
+Con otro equipo de Apple, necesitas tus propios identificadores, contenedor y grupo de llavero, además de solicitar a Apple el permiso de navegador. Esta aprobación no se transfiere a otra cuenta. Los datos de iCloud y las contraseñas de nuestro equipo tampoco son accesibles desde una compilación de otro equipo.
+
+Este permiso habilita la elección de navegador y la acción de pantalla de inicio. Las contraseñas propias de Search usan el grupo de llavero compartido; el permiso de navegador no da acceso general a la base de datos de la app Contraseñas de Apple. El permiso de passkeys para navegadores de Mac es otra capacidad.
+
+## Versión 1.0.1 — 21 de octubre de 2026
+
+- Incluye el permiso de navegador predeterminado y permite ofrecer «Añadir a pantalla de inicio» desde Compartir.
+- Mantiene el identificador, el contenedor de iCloud, el grupo de contraseñas y el entorno CloudKit Development.
+- El plist generado toma la versión y el número de compilación de `MARKETING_VERSION` y `CURRENT_PROJECT_VERSION`, sin valores antiguos que los oculten.
+
+Verificación de la compilación `1792569136`:
+
+- Archivo Release y exportación IPA de desarrollo completados; firma, perfil, capacidad nueva e identidades existentes verificados.
+- Instalada sobre la versión 1.0 en el iPhone 16 Pro. Los tres archivos de datos locales conservan el mismo contenido tras actualizar.
+- Arranque confirmado en el iPhone; el proceso permanece activo.
+- Víctor ha comprobado en el dispositivo que «Añadir a pantalla de inicio» aparece en Compartir y que Search figura en Ajustes entre los navegadores predeterminados.
+
+Estas comprobaciones no incluyen crear y abrir un acceso de pantalla de inicio, cambiar el navegador predeterminado ni volver a validar la sincronización entre dispositivos.
+
+Los archivos de desarrollo están en `build/` y solo sirven en dispositivos registrados en su perfil. No son una publicación de TestFlight o App Store. El código y las notas no incluyen perfiles, certificados ni copias de datos personales.
 
 ## Cómo está hecha
 
