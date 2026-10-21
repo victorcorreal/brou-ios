@@ -1,7 +1,7 @@
 # The Xcode project is made from this file: `xcodegen generate`.
-# Search for iPhone, iPad and iPhone Duo: Victor's companion to his build of
-# Search for Mac, with bookmarks and passwords shared through iCloud.
-name: Search
+# Brou for iPhone and iPad: Victor's companion to his build of
+# Brou for Mac, with bookmarks and passwords shared through iCloud.
+name: Brou
 options:
   bundleIdPrefix: cat.correal
   deploymentTarget:
@@ -16,7 +16,7 @@ settings:
     SWIFT_VERSION: "5.0"
     TARGETED_DEVICE_FAMILY: "1,2"
 targets:
-  Search:
+  Brou:
     type: application
     platform: iOS
     sources:
@@ -39,12 +39,12 @@ targets:
             CFBundleTypeRole: Viewer
             CFBundleURLSchemes: [http, https]
     entitlements:
-      path: Search.entitlements
+      path: Brou.entitlements
       properties:
         # Approved by Apple for cat.correal.search on 20 October 2026.
         com.apple.developer.web-browser: true
-        # The same container and keychain group as Search for Mac
-        # (see SINCRONIZACION.md in Victor's Mac/Search folder).
+        # The same container and keychain group as Brou for Mac
+        # (see Docs/SYNC.md).
         com.apple.developer.icloud-container-identifiers: [iCloud.cat.correal.search]
         com.apple.developer.icloud-services: [CloudKit]
         com.apple.developer.icloud-container-environment: Development

@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct SearchApp: App {
+struct BrouApp: App {
     @StateObject private var browser = Browser()
     @Environment(\.scenePhase) private var phase
 

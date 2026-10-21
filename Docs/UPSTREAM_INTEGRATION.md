@@ -22,7 +22,7 @@ Para compilar la app sin firma para el simulador, con XcodeGen instalado:
 
 ```sh
 xcodegen generate
-xcodebuild -project Search.xcodeproj -scheme Search -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build/Simulator CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project Brou.xcodeproj -scheme Brou -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build/Simulator CODE_SIGNING_ALLOWED=NO build
 ```
 
 El build de simulador y el archivo Release para dispositivo se han completado. El archivo Release usa la configuración de desarrollo existente: bundle ID `cat.correal.search`, mismo grupo de llavero, contenedor CloudKit y entorno Development, con permiso de navegador. El número de compilación sube; no se cambia la versión visible 1.1.0.
