@@ -1,93 +1,61 @@
-# Brou para iPhone y iPad
+<div align="center">
+  <img src="Brand/Brou.png" width="104" alt="Brou — white steam on black">
+  <h1>Brou for iPhone and iPad</h1>
+  <p>A little room to read. And a way to pick it up again.</p>
+  <p><a href="Docs/BUILDING.md">Build</a> · <a href="Docs/SYNC.md">Continuity</a> · <a href="Docs/PRIVACY.md">Privacy</a> · <a href="CONTRIBUTING.md">Contribute</a></p>
+</div>
 
-La app de Victor Correal que acompaña a Brou para Mac. Comparte por iCloud los favoritos y las contraseñas.
+The native iPhone companion to [Brou for Mac](https://github.com/victorcorreal/search). Read with less clutter, keep your bookmarks close and share Brou credentials between your devices.
 
-- **Inicio y pestañas nuevas:** pantalla mínima con el cursor en el buscador y el teclado listo para escribir. El menú azul «…» queda abajo a la derecha; desde él puedes abrir los marcadores, las pestañas y los ajustes. Un arranque completo selecciona la pantalla inicial y conserva las pestañas anteriores; volver desde segundo plano mantiene la página actual.
-- **Navegar:** un campo para direcciones o búsquedas (Google), sin texto de ejemplo. Pestañas, atrás y adelante (también deslizando), recargar, compartir y copiar la dirección.
-- **Bloqueador de anuncios:** el mismo del Mac, compilado dentro de WebKit.
-- **Páginas oscuras:** cualquier web clara en oscuro, con fotos y vídeos en su color, como en el Mac. El fondo visible de la cabecera continúa bajo la hora, también cuando la web usa un gris oscuro en lugar de negro.
-- **Modo lectura solo texto:** el artículo y nada más, con el título una vez.
-- **Favoritos en iCloud:** los mismos registros que Brou para Mac (zona `Search`, tipo `Bookmark`).
-- **Contraseñas en el llavero de iCloud:** el mismo grupo que el Mac. Ofrece guardarlas al enviar un formulario, las rellena con un toque y las muestra con Face ID.
-- **Filtro por subdominio:** las sugerencias y la llave de la barra muestran solo las cuentas del host abierto. `cms`, `dev` y el dominio principal se mantienen separados. Si no hay cuentas para ese host, la lista queda vacía; "Show All Passwords" permite verlas todas. Se conserva la equivalencia histórica entre `www` y el dominio sin `www`.
-- **Contraseñas de la web abierta:** la llave de la barra de acceso abre solo las cuentas de esa web, con cuándo se usó y se guardó cada una. Deslizar a la izquierda borra esa cuenta y ninguna más. "Show All Passwords" vuelve a la lista entera.
-- **Navegador predeterminado y pantalla de inicio:** desde la versión 1.0.1, la app incluye el permiso de navegador de Apple (`com.apple.developer.web-browser`), aprobado para `cat.correal.search` el 20 de octubre de 2026. Puedes elegir Brou como navegador predeterminado en Ajustes. "Share" entrega la página al menú de compartir de iOS, que ofrece "Add to Home Screen", con el icono y el nombre de la web. Un icono guardado sin "Open as Web App" abre su web en el navegador predeterminado que hayas elegido.
-- **Diseño:** en iPhone (y el Duo plegado), página a pantalla completa con la barra abajo. En iPad (y el Duo abierto), barra lateral con pestañas y favoritos.
+Maintained by [Victor Correal](https://github.com/victorcorreal). Based in part on [Search by Office Commun](https://github.com/driceroland/Search), under MIT. **Brou** means broth in Catalan. The shared icon is a single white wisp of steam on black.
 
-Todo lo que comparte con el Mac está descrito en `SINCRONIZACION.md`, en la carpeta `Mac/Search` de Vcode.
+## Small by design
 
-## Instalar
+- **Ready to search.** On launch and each new tab, the cursor is in the address field and the keyboard is ready. A small blue **…** menu at the bottom right opens bookmarks, tabs and settings. Previous tabs remain available.
+- **Comfortable reading.** Dark Pages, text-only reading and a page background that continues behind the status bar.
+- **Your saved web, on both devices.** Bookmark folders via CloudKit and Brou credentials via iCloud Keychain. Password suggestions use the current host, keeping CMS, development and root-site accounts separate. The historical `www`/root alias remains.
+- **Native browsing.** WebKit, tabs, back/forward gestures, a content blocker and sharing. iPad uses a sidebar. The approved maintainer build supports default-browser selection and Add to Home Screen.
 
-```bash
+History, cookies and sessions remain local. There is no iPhone private-browsing mode or dedicated download manager in this version. The browser entitlement does not grant access to Apple's Passwords database.
+
+## Try the source preview
+
+Requires full Xcode, XcodeGen and iOS 18 or later. Current builds are checked with Xcode 27. No private signing files are needed to compile for the simulator:
+
+```sh
+git clone https://github.com/victorcorreal/search-ios.git
+cd search-ios
 xcodegen generate
+xcodebuild -project Search.xcodeproj -scheme Search \
+  -configuration Debug -sdk iphonesimulator \
+  -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath build/Simulator CODE_SIGNING_ALLOWED=NO DEVELOPMENT_TEAM= build
 ```
 
-Después, en Xcode, elige el esquema **Search** y tu iPhone o iPad, y pulsa ⌘R. O desde la terminal:
+Then select an available simulator and run the Search scheme in Xcode. The product is named **Brou.app**; the internal scheme stays Search. A simulator build does not validate iCloud continuity. [Build and Apple signing guide](Docs/BUILDING.md) explains physical devices and your own account.
 
-```bash
-xcodebuild -project Search.xcodeproj -scheme Search -destination 'id=<UDID>' -allowProvisioningUpdates build
-xcrun devicectl device install app --device <UDID> <ruta a Brou.app>
+There is no public TestFlight/App Store release of this source preview. The existing maintainer development distribution is tied to registered devices and uses **CloudKit Development**. Do not mistake it for a generally installable release.
+
+## Continuity and privacy
+
+The paired apps use the same iCloud account, CloudKit container and keychain access group. Bookmarks fetch on launch, foreground activation and every five minutes. Credentials use the system's synchronizable keychain. They are separate from Apple's Passwords app.
+
+Creating, renaming and deleting a bookmark, plus credential save/read/delete in both directions, were verified on a physical Mac and iPhone. Offline changes, concurrent conflicts and account switching remain unverified. See [sync design](Docs/SYNC.md) and [verification](Docs/VERIFICATION.md).
+
+Brou adds no analytics or maintainer telemetry. Websites, Google searches and iCloud still make network requests. The blocker is not a promise of anonymity. [Privacy and network notes](Docs/PRIVACY.md).
+
+## Contribute
+
+[Report a bug](https://github.com/victorcorreal/search-ios/issues/new/choose), using synthetic data and redacted screenshots. Never send saved passwords, cookies or browsing history. [Security reports](SECURITY.md) are private.
+
+```sh
+python3 Tests/UpstreamRegression/run.py
+swiftc Sources/Scripts.swift Tests/TopColorHarness.swift -o build/top-colour
+build/top-colour
 ```
 
-Firma con el equipo Great Heights Systems S.L. (`E653G759EN`). Instalada así, dura un año. La distribución pública y el nombre en App Store Connect se preparan por separado. Brou tiene nombre e icono propios.
+These regression harnesses run production logic against synthetic keychain data and local WebKit pages on macOS. They do not replace physical iPhone tests. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-### Firma y permiso de navegador
+## License and origin
 
-El identificador sigue siendo `cat.correal.search`. El contenedor `iCloud.cat.correal.search` y el grupo de llavero compartido tampoco cambian. Para actualizar, instala la nueva compilación sobre la anterior, sin desinstalarla.
-
-La aprobación de Apple permite usar la capacidad, pero el perfil de firma también debe incluirla. En Xcode, abre el target Search → Signing & Capabilities, comprueba el equipo, la firma automática y la capacidad **Default Web Browser**. Deja que Xcode actualice el perfil antes de compilar. La firma del ejecutable y el perfil deben contener `com.apple.developer.web-browser = true`.
-
-Con otro equipo de Apple, necesitas tus propios identificadores, contenedor y grupo de llavero, además de solicitar a Apple el permiso de navegador. Esta aprobación no se transfiere a otra cuenta. Los datos de iCloud y las contraseñas de nuestro equipo tampoco son accesibles desde una compilación de otro equipo.
-
-Este permiso habilita la elección de navegador y la acción de pantalla de inicio. Las contraseñas propias de Brou usan el grupo de llavero compartido; el permiso de navegador no da acceso general a la base de datos de la app Contraseñas de Apple. El permiso de passkeys para navegadores de Mac es otra capacidad.
-
-## Brou 1.1.0 — 21 de octubre de 2026
-
-Nombre visible, nombre del ejecutable e icono propios. El icono usa el mismo original que la app para Mac; véase [Brand/README.md](Brand/README.md). Se conservan `cat.correal.search`, el contenedor y la zona de CloudKit, el grupo y la etiqueta de las contraseñas y la carpeta de datos local. El permiso de navegador aprobado sigue incluido. No se desinstala la versión anterior para actualizar.
-
-El proyecto, el esquema y el target siguen llamándose `Search` para conservar las instrucciones de compilación y facilitar el mantenimiento. La app compilada se llama `Brou.app`.
-
-## Versión 1.0.1 — 21 de octubre de 2026
-
-- Incluye el permiso de navegador predeterminado y permite ofrecer «Añadir a pantalla de inicio» desde Compartir.
-- Mantiene el identificador, el contenedor de iCloud, el grupo de contraseñas y el entorno CloudKit Development.
-- El plist generado toma la versión y el número de compilación de `MARKETING_VERSION` y `CURRENT_PROJECT_VERSION`, sin valores antiguos que los oculten.
-
-Verificación de la compilación `1792569136`:
-
-- Archivo Release y exportación IPA de desarrollo completados; firma, perfil, capacidad nueva e identidades existentes verificados.
-- Instalada sobre la versión 1.0 en el iPhone 16 Pro. Los tres archivos de datos locales conservan el mismo contenido tras actualizar.
-- Arranque confirmado en el iPhone; el proceso permanece activo.
-- Víctor ha comprobado en el dispositivo que «Añadir a pantalla de inicio» aparece en Compartir y que Search figura en Ajustes entre los navegadores predeterminados.
-
-Estas comprobaciones no incluyen crear y abrir un acceso de pantalla de inicio, cambiar el navegador predeterminado ni volver a validar la sincronización entre dispositivos.
-
-Los archivos de desarrollo están en `build/` y solo sirven en dispositivos registrados en su perfil. No son una publicación de TestFlight o App Store. El código y las notas no incluyen perfiles, certificados ni copias de datos personales.
-
-## Cómo está hecha
-
-- `Sources/Browser.swift`: pestañas, sesión, ajustes, contraseñas ofrecidas y un historial local para las sugerencias.
-- `Sources/Tab.swift`: cada página (`WKWebView`), sus scripts y la navegación.
-- `Sources/CloudSync.swift`: copia del motor del Mac (`CKSyncEngine`), con la misma lógica y los mismos registros.
-- `Sources/Vault.swift`: contraseñas en el grupo compartido del llavero.
-- `Sources/Forms.swift`: detecta formularios de acceso, rellena y avisa al enviar.
-- `Sources/Shield.swift`: el bloqueador, copiado del Mac.
-- `Resources/JS/`: modo oscuro y lectura, los mismos scripts que el Mac (vía Penumbra).
-
-## Probado
-
-En el simulador iPhone 18 Pro (iOS 27.0): sesión restaurada con tres pestañas, páginas oscuras con fotos en su color y la zona de la hora en negro, modo lectura solo texto, añadir favorito, cambiar de pestaña, guardar una contraseña al enviar un formulario y rellenarla después. Las contraseñas de la web abierta (12-oct-2026): con dos cuentas en `localhost` y otra en `127.0.0.1` cuyo usuario contiene "localhost", la llave muestra solo las dos primeras, borra una sin tocar la otra y la barra deja de ofrecerla. Dos cuentas con el mismo usuario en `localhost`, una guardada por http y otra por https, con contraseñas distintas (12-oct-2026): cada una se muestra y se rellena con la suya. En el iPad Pro 11" (M5): barra lateral con pestañas y favoritos. La franja de la hora (18-oct-2026): en guidedoc.tv, al bajar, toma el gris de su cabecera fija y no deja ver los carteles por encima; en Wikipedia es clara; con Páginas oscuras, negra.
-
-No se puede probar en el simulador: la sincronización con iCloud, porque el simulador no tiene cuenta. Se prueba con tu iPhone y tu Mac.
-
-## Licencia
-
-Parte del código viene de Search, de Office Commun, con licencia MIT. Detalle en `NOTICE` y `LICENSE`.
-
-[Password host-scope verification](Docs/PASSWORD_HOST_SCOPE.md).
-
-[Marcadores en el inicio y verificación](Docs/START_BOOKMARKS.md).
-
-[Continuidad del fondo bajo la hora](Docs/CONTINUOUS_TOP.md).
-
-[Correcciones de upstream y pruebas](Docs/UPSTREAM_INTEGRATION.md).
+[MIT](LICENSE), with original Office Commun notices and Victor Correal's contributions preserved. [NOTICE](NOTICE) maps the reused code to its current paths. This is an independent companion app, not an Office Commun release. Read [Brou 1.1.0 notes](Docs/RELEASE_1.1.0.md), [upstream maintenance](Docs/UPSTREAM_INTEGRATION.md) and [brand provenance](Brand/README.md).

@@ -6,8 +6,7 @@ import os
 // Bookmarks in iCloud, the same in Search on the Mac and on Victor's iPhone.
 //
 // The iPhone's copy of Search for Mac's CloudSync.swift: the same logic, the
-// same records. The schema is written down in Victor's SINCRONIZACION.md;
-// change it there and in both apps at once.
+// same records. The schema is documented in Docs/SYNC.md; change it in both apps at once.
 //
 // Each bookmark and each folder is one record in the zone "Search" of the
 // private database of iCloud.cat.correal.search. CKSyncEngine keeps track of
@@ -129,7 +128,7 @@ final class CloudSync {
 
     /// A test run's diary of what the engine did, for Tests/cloud_sync.py.
     private func note(_ line: String) {
-        log.info("\(line, privacy: .public)")
+        log.info("\(line, privacy: .private)")
         guard Store.testing, let data = "\(Date()) \(line)\n".data(using: .utf8) else { return }
         let file = Store.file("icloud-events.log")
         if let handle = try? FileHandle(forWritingTo: file) {
@@ -355,7 +354,7 @@ extension CloudSync: CKSyncEngineDelegate {
                      .notAuthenticated, .operationCancelled, .requestRateLimited:
                     break
                 default:
-                    log.error("iCloud could not save \(id.recordName, privacy: .public): \(failure.error.localizedDescription, privacy: .public)")
+                    log.error("iCloud could not save \(id.recordName, privacy: .private): \(failure.error.localizedDescription, privacy: .private)")
                 }
             }
             fold(theirs, deleted: [])
