@@ -59,20 +59,11 @@ enum Vault {
             .sorted { $0.host == $1.host ? $0.user < $1.user : $0.host < $1.host }
     }
 
-    /// Only the page's host; parent, sibling and child subdomains stay out.
-    static func logins(for host: String, clear: Bool) -> [Login] {
-        return rows([kSecAttrServer as String: passwordHost(host)])
-            .compactMap(login(from:))
-            .filter { !clear || $0.clear }
-            .sorted { ($0.used ?? .distantPast) > ($1.used ?? .distantPast) }
-    }
-
     /// What is kept for a page's site, as the list needs it: the one used
     /// last first.
     static func kept(for host: String) -> [Kept] {
         let site = passwordHost(host)
-        return all()
-            .filter { $0.host == site }
+        return rows([kSecAttrServer as String: site]).compactMap(kept(from:))
             .sorted { ($0.used ?? .distantPast) > ($1.used ?? .distantPast) }
     }
 
@@ -133,15 +124,11 @@ enum Vault {
         return (used, clear)
     }
 
-    private static func login(from row: [String: Any]) -> Login? {
-        guard let host = row[kSecAttrServer as String] as? String,
-              let user = row[kSecAttrAccount as String] as? String
-        else { return nil }
-        let ref = row[kSecValuePersistentRef as String] as? Data
-        let password = if let ref { secret(ref: ref) } else { secret(host: host, user: user) }
+    /// Read the chosen item only, never all accounts when a field gains focus.
+    static func login(_ kept: Kept) -> Login? {
+        let password = if let ref = kept.ref { secret(ref: ref) } else { secret(host: kept.host, user: kept.user) }
         guard let password else { return nil }
-        let (used, clear) = noted(row)
-        return Login(host: host, user: user, password: password, used: used, clear: clear, ref: ref)
+        return Login(host: kept.host, user: kept.user, password: password, used: kept.used, clear: kept.clear, ref: kept.ref)
     }
 
     private static func kept(from row: [String: Any]) -> Kept? {

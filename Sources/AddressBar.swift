@@ -143,7 +143,7 @@ struct LoginStrip: View {
     }
 
     /// The user name; with the host too when another login has the same one.
-    private func name(of login: Login) -> String {
+    private func name(of login: Kept) -> String {
         guard !login.user.isEmpty else { return login.host }
         let twins = browser.offered.filter { $0.user == login.user }
         return twins.count > 1 && Set(twins.map(\.host)).count > 1 ? "\(login.user) · \(login.host)" : login.user

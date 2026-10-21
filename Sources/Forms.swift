@@ -15,13 +15,20 @@ enum Forms {
         try { window.webkit.messageHandlers.searchForms.postMessage(message); } catch (e) {}
       };
       const passwordIn = (root) => root && root.querySelector && root.querySelector('input[type="password"]');
-      const isUser = (el) => el && el.tagName === 'INPUT' &&
+      // Adapted from Search upstream 4be2fd3: accessible names matter too.
+      const aside = (el) => {
+        const words = [el.name, el.id, el.getAttribute('autocomplete'), el.getAttribute('aria-label'),
+          el.getAttribute('placeholder')].join(' ').toLowerCase();
+        return el.type === 'search' || /(^|[\s_-])(q|title)($|[\s_-])|query|search|otp|otc|one-time|captcha|code|coupon|promo/.test(words) ||
+          !!(el.closest && el.closest('[role="search"]'));
+      };
+      const isUser = (el) => el && el.tagName === 'INPUT' && !aside(el) &&
         (/^(email|text|tel)$/i.test(el.type || 'text')) &&
         (/user|login|email|mail|account|nombre|usuario|correo/i.test((el.name || '') + ' ' + (el.id || '') + ' ' + (el.autocomplete || '')) ||
          el.type === 'email' || el.autocomplete === 'username');
       const userFor = (password) => {
         const scope = password.form || document;
-        const fields = [...scope.querySelectorAll('input')].filter((f) => f.offsetParent !== null || f === document.activeElement);
+        const fields = [...scope.querySelectorAll('input')].filter((f) => !aside(f) && (f.offsetParent !== null || f === document.activeElement));
         const before = fields.slice(0, fields.indexOf(password)).reverse();
         return before.find(isUser) || before.find((f) => /^(email|text|tel)$/i.test(f.type || 'text')) || null;
       };
@@ -34,7 +41,7 @@ enum Forms {
       };
       document.addEventListener('focusin', (event) => {
         const el = event.target;
-        if (!el || el.tagName !== 'INPUT') return;
+        if (!el || el.tagName !== 'INPUT' || aside(el)) return;
         const password = el.type === 'password' ? el : passwordIn(el.form);
         if (password || isUser(el)) post({ kind: 'focus' });
       }, true);

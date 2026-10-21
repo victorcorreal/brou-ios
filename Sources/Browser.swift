@@ -31,7 +31,7 @@ final class Browser: ObservableObject {
     @Published var passwordSite: String?
 
     /// Logins for the sign-in box the page has just touched.
-    @Published var offered: [Login] = []
+    @Published var offered: [Kept] = []
     /// A password the page has just sent, waiting for "keep it?".
     @Published var toKeep: Keepable?
     /// A line said at the foot of the window for a moment.
@@ -147,16 +147,20 @@ final class Browser: ObservableObject {
 
     func offerLogins(for tab: Tab) {
         guard tab.id == active?.id, let url = tab.url, let host = url.host() else { return }
-        offered = Vault.logins(for: host, clear: url.scheme?.lowercased() == "http")
+        offered = Vault.kept(for: host).filter { url.scheme?.lowercased() != "http" || $0.clear }
     }
 
     func dismissLogins(for tab: Tab) {
         if tab.id == active?.id { offered = [] }
     }
 
-    func fill(_ login: Login) {
-        active?.fill(login)
+    func fill(_ kept: Kept) {
+        guard let tab = active, let url = tab.url, let host = url.host(),
+              Vault.passwordHost(host) == kept.host,
+              url.scheme?.lowercased() != "http" || kept.clear else { offered = []; return }
         offered = []
+        guard let login = Vault.login(kept) else { say("The keychain refused it"); return }
+        tab.fill(login)
     }
 
     /// The page host stays selected even when it has no saved account.
