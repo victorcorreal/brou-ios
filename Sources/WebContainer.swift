@@ -52,6 +52,8 @@ struct WebContainer: UIViewRepresentable {
 /// field, alone, a little above the middle, nothing written in it.
 struct BlankPage: View {
     @EnvironmentObject var browser: Browser
+    @Environment(\.scenePhase) private var phase
+    @ObservedObject var tab: Tab
     @Binding var typing: String
     @FocusState.Binding var focused: Bool
 
@@ -75,7 +77,19 @@ struct BlankPage: View {
             .frame(maxWidth: .infinity)
         }
         .background(Palette.ground.ignoresSafeArea())
+        .overlay(alignment: .bottomTrailing) {
+            PageMenu(tab: tab, startPage: true, prepare: { focused = false })
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(.blue)
+                .frame(width: 44, height: 44)
+                .accessibilityIdentifier("start-menu-button")
+                .padding(.trailing, 16)
+                .padding(.bottom, 12)
+        }
         .onAppear { focused = true }
+        .onChange(of: phase) { _, now in
+            if now == .active, browser.sheet == nil { focused = true }
+        }
     }
 
     private var field: some View {
@@ -139,7 +153,7 @@ struct PageArea: View {
         ZStack {
             // Under the clock too: a dark page shouldn't end in a white band.
             WebContainer(tab: tab, band: tab.isBlank ? .clear : tab.shade ?? .systemBackground).ignoresSafeArea(edges: .top)
-            if tab.isBlank { BlankPage(typing: $typing, focused: $focused) }
+            if tab.isBlank { BlankPage(tab: tab, typing: $typing, focused: $focused) }
         }
     }
 }

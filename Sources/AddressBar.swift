@@ -155,9 +155,23 @@ struct PageMenu: View {
     @EnvironmentObject var browser: Browser
     @EnvironmentObject var bookmarks: Bookmarks
     @ObservedObject var tab: Tab
+    var startPage = false
+    var prepare: () -> Void = {}
 
     var body: some View {
         Menu {
+            if startPage {
+                Button { prepare(); browser.sheet = .bookmarks } label: {
+                    Label("Bookmarks", systemImage: "bookmark")
+                }
+                Button { prepare(); browser.sheet = .tabs } label: {
+                    Label("Tabs", systemImage: "square.on.square")
+                }
+                Button { browser.newTab() } label: {
+                    Label("New Tab", systemImage: "plus")
+                }
+                Divider()
+            }
             Button {
                 browser.toggleReader()
             } label: {
@@ -183,12 +197,12 @@ struct PageMenu: View {
                 }
             }
             Divider()
-            Button { browser.showPasswords() } label: { Label("Passwords", systemImage: "key") }
-            Button { browser.sheet = .settings } label: { Label("Settings", systemImage: "gearshape") }
+            Button { prepare(); browser.showPasswords() } label: { Label("Passwords", systemImage: "key") }
+            Button { prepare(); browser.sheet = .settings } label: { Label("Settings", systemImage: "gearshape") }
         } label: {
             Image(systemName: "ellipsis.circle")
         }
-        .accessibilityLabel("Page")
+        .accessibilityLabel(startPage ? "Menu" : "Page")
         .background(AnchorView(anchor: anchor))
     }
 

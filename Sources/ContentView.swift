@@ -79,15 +79,15 @@ private struct NarrowTab: View {
                     }
                 }
             LoginStrip()
-            if !(tab.isBlank && focused) {
+            if !tab.isBlank {
                 VStack(spacing: 10) {
-                    if !tab.isBlank { AddressBar(tab: tab, typing: $typing, focused: $focused) }
+                    AddressBar(tab: tab, typing: $typing, focused: $focused)
                     if !focused { NarrowButtons(tab: tab) }
                 }
                 .padding(.horizontal, 12)
                 .padding(.top, 8)
                 .padding(.bottom, focused ? 8 : 2)
-                .background(tab.isBlank ? AnyShapeStyle(Palette.ground) : AnyShapeStyle(.bar))
+                .background(.bar)
             }
         }
     }
@@ -177,7 +177,7 @@ private struct WideTab: View {
                 } else {
                     AddressBar(tab: tab, typing: $typing, focused: $focused)
                 }
-                PageMenu(tab: tab)
+                if !tab.isBlank { PageMenu(tab: tab) }
                 Button { browser.newTab() } label: { Image(systemName: "plus") }
                     .accessibilityLabel("New Tab")
             }
