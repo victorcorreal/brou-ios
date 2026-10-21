@@ -5,7 +5,7 @@ La app de Victor Correal que acompaña a Brou para Mac. Comparte por iCloud los 
 - **Inicio y pestañas nuevas:** pantalla mínima con el cursor en el buscador y el teclado listo para escribir. El menú azul «…» queda abajo a la derecha; desde él puedes abrir los marcadores, las pestañas y los ajustes. Un arranque completo selecciona la pantalla inicial y conserva las pestañas anteriores; volver desde segundo plano mantiene la página actual.
 - **Navegar:** un campo para direcciones o búsquedas (Google), sin texto de ejemplo. Pestañas, atrás y adelante (también deslizando), recargar, compartir y copiar la dirección.
 - **Bloqueador de anuncios:** el mismo del Mac, compilado dentro de WebKit.
-- **Páginas oscuras:** cualquier web clara en oscuro, con fotos y vídeos en su color, como en el Mac.
+- **Páginas oscuras:** cualquier web clara en oscuro, con fotos y vídeos en su color, como en el Mac. El fondo visible de la cabecera continúa bajo la hora, también cuando la web usa un gris oscuro en lugar de negro.
 - **Modo lectura solo texto:** el artículo y nada más, con el título una vez.
 - **Favoritos en iCloud:** los mismos registros que Brou para Mac (zona `Search`, tipo `Bookmark`).
 - **Contraseñas en el llavero de iCloud:** el mismo grupo que el Mac. Ofrece guardarlas al enviar un formulario, las rellena con un toque y las muestra con Face ID.
@@ -87,3 +87,5 @@ Parte del código viene de Search, de Office Commun, con licencia MIT. Detalle e
 [Password host-scope verification](Docs/PASSWORD_HOST_SCOPE.md).
 
 [Marcadores en el inicio y verificación](Docs/START_BOOKMARKS.md).
+
+[Continuidad del fondo bajo la hora](Docs/CONTINUOUS_TOP.md).

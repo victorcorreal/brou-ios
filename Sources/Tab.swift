@@ -16,9 +16,8 @@ final class Tab: NSObject, ObservableObject, Identifiable {
     @Published var canGoBack = false
     @Published var canGoForward = false
     @Published var reading = false
-    /// The band under the clock: the page's own colour, the one it asks
-    /// for (theme-color), or else a bar it holds at its top, or its
-    /// background (see Scripts.top); black under Dark Pages.
+    /// The rendered background at the upper edge, extended under the clock.
+    /// Theme metadata is only a fallback until the page reports its colour.
     @Published private(set) var shade: UIColor?
     private var pageTop: UIColor?
 
@@ -74,20 +73,19 @@ final class Tab: NSObject, ObservableObject, Identifiable {
         controller.removeAllUserScripts()
         controller.addUserScript(WKUserScript(source: Forms.script, injectionTime: .atDocumentEnd, forMainFrameOnly: true, in: Tab.world))
         controller.addUserScript(WKUserScript(source: Scripts.top, injectionTime: .atDocumentEnd, forMainFrameOnly: true, in: Tab.world))
-        // What shows above and below the page — under the clock, past the
-        // end — is painted in the page's own colour, white before Dark Pages
-        // turns it over. Black while Dark Pages is on; the page's own otherwise.
-        web.underPageBackgroundColor = browser?.darkPages == true ? .black : nil
+        // Keep the native backdrop in step with the clock area; the page
+        // script supplies the rendered colour once CSS is available.
         reshade()
         if browser?.darkPages == true {
             controller.addUserScript(WKUserScript(source: Scripts.dark, injectionTime: .atDocumentStart, forMainFrameOnly: true, in: Tab.world))
         }
     }
 
-    /// A light page's theme-color would be a white band over the page Dark
-    /// Pages has turned dark: then it is black, as the page is.
+    /// A rendered grey header must continue as grey, including under Dark
+    /// Pages. Metadata and pure black are only used before CSS is available.
     private func reshade() {
-        shade = browser?.darkPages == true ? .black : web.themeColor ?? pageTop
+        shade = pageTop ?? (browser?.darkPages == true ? .black : web.themeColor)
+        web.underPageBackgroundColor = shade
     }
 
     /// What the page script found at the top, as "rgb(r,g,b)".
@@ -100,9 +98,11 @@ final class Tab: NSObject, ObservableObject, Identifiable {
 
     /// Dark Pages switched for the page already up, and for the next ones.
     func applyDark(_ on: Bool) {
+        pageTop = nil
         arm()
         guard !isBlank else { return }
-        web.evaluateJavaScript(on ? Scripts.dark : Scripts.darkOff, in: nil, in: Tab.world) { _ in }
+        let script = (on ? Scripts.dark : Scripts.darkOff) + "; window.dispatchEvent(new Event('search-top-refresh')); true"
+        web.evaluateJavaScript(script, in: nil, in: Tab.world) { _ in }
     }
 
     func go(to url: URL) {
@@ -160,6 +160,12 @@ extension Tab: WKNavigationDelegate, WKUIDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         reading = false
         browser?.dismissLogins(for: self)
+    }
+
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        // A colour sampled from the previous document cannot describe this one.
+        pageTop = nil
+        reshade()
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

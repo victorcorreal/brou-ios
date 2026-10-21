@@ -33,6 +33,7 @@ struct WebContainer: UIViewRepresentable {
     }
 
     func updateUIView(_ view: Holder, context: Context) {
+        view.backgroundColor = band
         view.band.backgroundColor = band
         guard tab.web.superview !== view else { return }
         view.subviews.filter { $0 !== view.band }.forEach { $0.removeFromSuperview() }
