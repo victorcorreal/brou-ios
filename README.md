@@ -89,3 +89,5 @@ Parte del código viene de Search, de Office Commun, con licencia MIT. Detalle e
 [Marcadores en el inicio y verificación](Docs/START_BOOKMARKS.md).
 
 [Continuidad del fondo bajo la hora](Docs/CONTINUOUS_TOP.md).
+
+[Correcciones de upstream y pruebas](Docs/UPSTREAM_INTEGRATION.md).

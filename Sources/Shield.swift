@@ -44,12 +44,16 @@ final class Shield {
         (["*cnn.com"], ".ad-slot-header__wrapper"),
     ]
 
+    static func networkFilter(for domain: String) -> String {
+        let escaped = domain.replacingOccurrences(of: ".", with: "\\.")
+        return "^https?://([^/]+\\.)?\(escaped)[:/]"
+    }
+
     func compile() {
         guard list == nil else { return }
         var rules: [[String: Any]] = Shield.unwanted.map { domain in
-            let escaped = domain.replacingOccurrences(of: ".", with: "\\.")
             return [
-                "trigger": ["url-filter": "^https?://([^/]+\\.)?\(escaped)", "load-type": ["third-party"]],
+                "trigger": ["url-filter": Shield.networkFilter(for: domain), "load-type": ["third-party"]],
                 "action": ["type": "block"],
             ]
         }
