@@ -6,17 +6,17 @@ Use full Xcode and XcodeGen. The deployment target is iOS 18; current validation
 
 ```sh
 xcodegen generate
-xcodebuild -project Search.xcodeproj -scheme Search \
+xcodebuild -project Brou.xcodeproj -scheme Brou \
   -configuration Debug -sdk iphonesimulator \
   -destination 'generic/platform=iOS Simulator' \
   -derivedDataPath build/Simulator CODE_SIGNING_ALLOWED=NO DEVELOPMENT_TEAM= build
 ```
 
-Select an available iPhone/iPad simulator in Xcode to run. The source scheme/module project retains Search; the product is Brou.app. The simulator is not evidence of real iCloud sync. Do not install a simulator product on a physical phone.
+Select an available iPhone/iPad simulator in Xcode to run. The project and scheme are Brou; the product is Brou.app. The simulator is not evidence of real iCloud sync. Do not install a simulator product on a physical phone.
 
 ## Your own Apple Developer account
 
-Full continuity needs a paid Apple Developer team and matching configuration in [Brou for Mac](https://github.com/victorcorreal/search/blob/main/Docs/BUILDING.md). Signing secrets and provisioning profiles are not shipped in either repo.
+Full continuity needs a paid Apple Developer team and matching configuration in [Brou for Mac](https://github.com/victorcorreal/brou/blob/main/Docs/BUILDING.md). Signing secrets and provisioning profiles are not shipped in either repo.
 
 Choose your own App ID (e.g. com.example.brou), container (iCloud.com.example.brou) and shared group. The group uses the actual App Identifier Prefix from your provisioning profile, which may differ from a legacy team's ID.
 
@@ -26,12 +26,12 @@ Choose your own App ID (e.g. com.example.brou), container (iCloud.com.example.br
 | `Sources/CloudSync.swift` | container constant |
 | `Sources/Vault.swift` | full group constant, matching the profile and Mac |
 
-Regenerate with `xcodegen generate`; it also regenerates Search.entitlements and Info.plist from the project properties. In Xcode select your team, use automatic signing, enable iCloud/CloudKit and Keychain Sharing for your App ID and connect a registered device. Use the same container/group in Mac.
+Regenerate with `xcodegen generate`; it also regenerates Brou.entitlements and Info.plist from the project properties. In Xcode select your team, use automatic signing, enable iCloud/CloudKit and Keychain Sharing for your App ID and connect a registered device. Use the same container/group in Mac.
 
 The `com.apple.developer.web-browser` entitlement was approved for the maintainer's current identity. That approval does not transfer to your account. Apply to Apple for your own default-browser entitlement, or remove that property from project.yml in your development checkout and regenerate. Without it you can still test ordinary browsing with iCloud capabilities that your own profile allows; do not expect default-browser selection or Add to Home Screen. Do not remove the iCloud entitlement from a physical-device build: the current iOS CloudSync startup expects a correctly provisioned container.
 
 ```sh
-xcodebuild -project Search.xcodeproj -scheme Search -configuration Debug \
+xcodebuild -project Brou.xcodeproj -scheme Brou -configuration Debug \
   -destination 'id=YOUR-DEVICE-UDID' -derivedDataPath build/Device \
   -allowProvisioningUpdates build
 xcrun devicectl device install app --device YOUR-DEVICE-UDID \

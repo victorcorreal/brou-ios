@@ -1,0 +1,425 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0C2A5E54DF5661F9E4D23E27 /* Scripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A065BE408B83C6AC1F89DA07 /* Scripts.swift */; };
+		10699E36939F8A0FE7D5A951 /* reader-after.js in Resources */ = {isa = PBXBuildFile; fileRef = CD023E62C6E344AC95D9D8A3 /* reader-after.js */; };
+		10FBB6224D3AF24D1723642F /* Shield.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5D3DDD08FD68ACB0870015 /* Shield.swift */; };
+		57FFE7082BBF671FFF937FBF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BE411954B90F2DFF905F446 /* Assets.xcassets */; };
+		6077435738B41C072F3DB8BC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331ABF310AD8773E41D61491 /* ContentView.swift */; };
+		619DECD48CFCD6C3AA248D9E /* Vault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0554E06CAA34B976FC0BC76E /* Vault.swift */; };
+		71218B3DAEE8A36398E8018E /* BrouApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC16B43FE9C904CD758A9A0 /* BrouApp.swift */; };
+		76ED3E921A7D559161575603 /* reader.js in Resources */ = {isa = PBXBuildFile; fileRef = 7CFD64BF11A5E3E24E2334DC /* reader.js */; };
+		7F05DB1C64E36FBECEBCCEF8 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0165CFE0C2F9BBF80D930800 /* Store.swift */; };
+		80A5DA0D43FE034DED9FC7AB /* Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF037BC7B57C31369A97A383 /* Browser.swift */; };
+		85D3952F7473EBFC3D295908 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89D4A0E1ED6FE7285850E37 /* Address.swift */; };
+		8A1D17BA8D2EB9390DBA6DEE /* CloudSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53216B629877AB799DA52B5F /* CloudSync.swift */; };
+		8C0D2BF93D9D9B54D2711C29 /* Sheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C77BB3FA01A8FC11178B1 /* Sheets.swift */; };
+		950C51AA8699B814D5EAC7CC /* Design.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34D297931EA461E4B4DE7F5 /* Design.swift */; };
+		9CBE6557AD5ECF200EDC8E0C /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC23C36C71CB934C3852CD0 /* Tab.swift */; };
+		A2A3FAADFD8C04BC1D892A34 /* dark.js in Resources */ = {isa = PBXBuildFile; fileRef = 8349361F33944C421ED1C6FF /* dark.js */; };
+		B06FB98522781EFFC7E18DBD /* text-only.js in Resources */ = {isa = PBXBuildFile; fileRef = 275BF647A43E948EAB26335D /* text-only.js */; };
+		B2E22E9C90DF8A3D2E4151F1 /* AddressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B74E52F5568FA637C8B27E5 /* AddressBar.swift */; };
+		B5ED9C8DF660CED6F76E3B2B /* WebContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52E275EF04D6FE7DBA7DF76 /* WebContainer.swift */; };
+		C04D8B3C14ACE52B423F9B1D /* Forms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91CB10D71C1887BBAD845A7D /* Forms.swift */; };
+		DD8BFD39C9192757A8F73290 /* Bookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751D4C5F1E52A569A02715F9 /* Bookmarks.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0165CFE0C2F9BBF80D930800 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		0554E06CAA34B976FC0BC76E /* Vault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vault.swift; sourceTree = "<group>"; };
+		275BF647A43E948EAB26335D /* text-only.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "text-only.js"; sourceTree = "<group>"; };
+		331ABF310AD8773E41D61491 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		3B74E52F5568FA637C8B27E5 /* AddressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBar.swift; sourceTree = "<group>"; };
+		3C2C77BB3FA01A8FC11178B1 /* Sheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheets.swift; sourceTree = "<group>"; };
+		3FC23C36C71CB934C3852CD0 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
+		4E314A9CF262CF3F1D08A920 /* Brou.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Brou.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		53216B629877AB799DA52B5F /* CloudSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSync.swift; sourceTree = "<group>"; };
+		6BC16B43FE9C904CD758A9A0 /* BrouApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrouApp.swift; sourceTree = "<group>"; };
+		751D4C5F1E52A569A02715F9 /* Bookmarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmarks.swift; sourceTree = "<group>"; };
+		7CFD64BF11A5E3E24E2334DC /* reader.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = reader.js; sourceTree = "<group>"; };
+		8349361F33944C421ED1C6FF /* dark.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = dark.js; sourceTree = "<group>"; };
+		91CB10D71C1887BBAD845A7D /* Forms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Forms.swift; sourceTree = "<group>"; };
+		9BE411954B90F2DFF905F446 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A065BE408B83C6AC1F89DA07 /* Scripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scripts.swift; sourceTree = "<group>"; };
+		A89D4A0E1ED6FE7285850E37 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
+		BF037BC7B57C31369A97A383 /* Browser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Browser.swift; sourceTree = "<group>"; };
+		CD023E62C6E344AC95D9D8A3 /* reader-after.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "reader-after.js"; sourceTree = "<group>"; };
+		D34D297931EA461E4B4DE7F5 /* Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Design.swift; sourceTree = "<group>"; };
+		D52E275EF04D6FE7DBA7DF76 /* WebContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebContainer.swift; sourceTree = "<group>"; };
+		EA5D3DDD08FD68ACB0870015 /* Shield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shield.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		2688ADCCD9CF260B20E4DCA4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9BE411954B90F2DFF905F446 /* Assets.xcassets */,
+				E25FE1BF09441B2B1D4C0F65 /* JS */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		54BA5EA05F8C690255479E34 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A89D4A0E1ED6FE7285850E37 /* Address.swift */,
+				3B74E52F5568FA637C8B27E5 /* AddressBar.swift */,
+				751D4C5F1E52A569A02715F9 /* Bookmarks.swift */,
+				6BC16B43FE9C904CD758A9A0 /* BrouApp.swift */,
+				BF037BC7B57C31369A97A383 /* Browser.swift */,
+				53216B629877AB799DA52B5F /* CloudSync.swift */,
+				331ABF310AD8773E41D61491 /* ContentView.swift */,
+				D34D297931EA461E4B4DE7F5 /* Design.swift */,
+				91CB10D71C1887BBAD845A7D /* Forms.swift */,
+				A065BE408B83C6AC1F89DA07 /* Scripts.swift */,
+				3C2C77BB3FA01A8FC11178B1 /* Sheets.swift */,
+				EA5D3DDD08FD68ACB0870015 /* Shield.swift */,
+				0165CFE0C2F9BBF80D930800 /* Store.swift */,
+				3FC23C36C71CB934C3852CD0 /* Tab.swift */,
+				0554E06CAA34B976FC0BC76E /* Vault.swift */,
+				D52E275EF04D6FE7DBA7DF76 /* WebContainer.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		7A0E61C5441691E84A4F01E7 = {
+			isa = PBXGroup;
+			children = (
+				2688ADCCD9CF260B20E4DCA4 /* Resources */,
+				54BA5EA05F8C690255479E34 /* Sources */,
+				C5AE4A6FECD9BA5E392ADC6A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C5AE4A6FECD9BA5E392ADC6A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4E314A9CF262CF3F1D08A920 /* Brou.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E25FE1BF09441B2B1D4C0F65 /* JS */ = {
+			isa = PBXGroup;
+			children = (
+				8349361F33944C421ED1C6FF /* dark.js */,
+				CD023E62C6E344AC95D9D8A3 /* reader-after.js */,
+				7CFD64BF11A5E3E24E2334DC /* reader.js */,
+				275BF647A43E948EAB26335D /* text-only.js */,
+			);
+			path = JS;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E5D3EAA69DC09362E8EBFD43 /* Brou */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9378D284C56609AFE6AD527A /* Build configuration list for PBXNativeTarget "Brou" */;
+			buildPhases = (
+				9D7171A1BF3EE46C7E7EEDB7 /* Sources */,
+				BB1AEC5A184D59E2C7BDAD41 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Brou;
+			packageProductDependencies = (
+			);
+			productName = Brou;
+			productReference = 4E314A9CF262CF3F1D08A920 /* Brou.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29222DBE95DD26D9C180FF22 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					E5D3EAA69DC09362E8EBFD43 = {
+						DevelopmentTeam = E653G759EN;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 1BF53BE26EEF28E4DF6CCE73 /* Build configuration list for PBXProject "Brou" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 7A0E61C5441691E84A4F01E7;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = C5AE4A6FECD9BA5E392ADC6A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E5D3EAA69DC09362E8EBFD43 /* Brou */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BB1AEC5A184D59E2C7BDAD41 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				57FFE7082BBF671FFF937FBF /* Assets.xcassets in Resources */,
+				A2A3FAADFD8C04BC1D892A34 /* dark.js in Resources */,
+				10699E36939F8A0FE7D5A951 /* reader-after.js in Resources */,
+				76ED3E921A7D559161575603 /* reader.js in Resources */,
+				B06FB98522781EFFC7E18DBD /* text-only.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9D7171A1BF3EE46C7E7EEDB7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85D3952F7473EBFC3D295908 /* Address.swift in Sources */,
+				B2E22E9C90DF8A3D2E4151F1 /* AddressBar.swift in Sources */,
+				DD8BFD39C9192757A8F73290 /* Bookmarks.swift in Sources */,
+				71218B3DAEE8A36398E8018E /* BrouApp.swift in Sources */,
+				80A5DA0D43FE034DED9FC7AB /* Browser.swift in Sources */,
+				8A1D17BA8D2EB9390DBA6DEE /* CloudSync.swift in Sources */,
+				6077435738B41C072F3DB8BC /* ContentView.swift in Sources */,
+				950C51AA8699B814D5EAC7CC /* Design.swift in Sources */,
+				C04D8B3C14ACE52B423F9B1D /* Forms.swift in Sources */,
+				0C2A5E54DF5661F9E4D23E27 /* Scripts.swift in Sources */,
+				8C0D2BF93D9D9B54D2711C29 /* Sheets.swift in Sources */,
+				10FBB6224D3AF24D1723642F /* Shield.swift in Sources */,
+				7F05DB1C64E36FBECEBCCEF8 /* Store.swift in Sources */,
+				9CBE6557AD5ECF200EDC8E0C /* Tab.swift in Sources */,
+				619DECD48CFCD6C3AA248D9E /* Vault.swift in Sources */,
+				B5ED9C8DF660CED6F76E3B2B /* WebContainer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		242D189568020683BB6F24C7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1792585822;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = E653G759EN;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3BB5844F88AD6F1ACEAF89C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Brou.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Brou;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Brou shows a saved password only after Face ID.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cat.correal.search;
+				PRODUCT_NAME = Brou;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		553F4D8C21B0BBF0D8C62569 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1792585822;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = E653G759EN;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C86E1555791E3AE47C107E2C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Brou.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Brou;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Brou shows a saved password only after Face ID.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cat.correal.search;
+				PRODUCT_NAME = Brou;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1BF53BE26EEF28E4DF6CCE73 /* Build configuration list for PBXProject "Brou" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				242D189568020683BB6F24C7 /* Debug */,
+				553F4D8C21B0BBF0D8C62569 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9378D284C56609AFE6AD527A /* Build configuration list for PBXNativeTarget "Brou" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3BB5844F88AD6F1ACEAF89C0 /* Debug */,
+				C86E1555791E3AE47C107E2C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29222DBE95DD26D9C180FF22 /* Project object */;
+}

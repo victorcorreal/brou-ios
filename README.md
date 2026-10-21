@@ -5,7 +5,7 @@
   <p><a href="Docs/BUILDING.md">Build</a> · <a href="Docs/SYNC.md">Continuity</a> · <a href="Docs/PRIVACY.md">Privacy</a> · <a href="CONTRIBUTING.md">Contribute</a></p>
 </div>
 
-The native iPhone companion to [Brou for Mac](https://github.com/victorcorreal/search). Read with less clutter, keep your bookmarks close and share Brou credentials between your devices.
+The native iPhone companion to [Brou for Mac](https://github.com/victorcorreal/brou). Read with less clutter, keep your bookmarks close and share Brou credentials between your devices.
 
 Maintained by [Victor Correal](https://github.com/victorcorreal). Based in part on [Search by Office Commun](https://github.com/driceroland/Search), under MIT. **Brou** means broth in Catalan. The shared icon is a single white wisp of steam on black.
 
@@ -23,16 +23,16 @@ History, cookies and sessions remain local. There is no iPhone private-browsing 
 Requires full Xcode, XcodeGen and iOS 18 or later. Current builds are checked with Xcode 27. No private signing files are needed to compile for the simulator:
 
 ```sh
-git clone https://github.com/victorcorreal/search-ios.git
-cd search-ios
+git clone https://github.com/victorcorreal/brou-ios.git
+cd brou-ios
 xcodegen generate
-xcodebuild -project Search.xcodeproj -scheme Search \
+xcodebuild -project Brou.xcodeproj -scheme Brou \
   -configuration Debug -sdk iphonesimulator \
   -destination 'generic/platform=iOS Simulator' \
   -derivedDataPath build/Simulator CODE_SIGNING_ALLOWED=NO DEVELOPMENT_TEAM= build
 ```
 
-Then select an available simulator and run the Search scheme in Xcode. The product is named **Brou.app**; the internal scheme stays Search. A simulator build does not validate iCloud continuity. [Build and Apple signing guide](Docs/BUILDING.md) explains physical devices and your own account.
+Then select an available simulator and run the Brou scheme in Xcode. The project, target and product are named **Brou**. A simulator build does not validate iCloud continuity. [Build and Apple signing guide](Docs/BUILDING.md) explains physical devices and your own account.
 
 There is no public TestFlight/App Store release of this source preview. The existing maintainer development distribution is tied to registered devices and uses **CloudKit Development**. Do not mistake it for a generally installable release.
 
@@ -46,7 +46,7 @@ Brou adds no analytics or maintainer telemetry. Websites, Google searches and iC
 
 ## Contribute
 
-[Report a bug](https://github.com/victorcorreal/search-ios/issues/new/choose), using synthetic data and redacted screenshots. Never send saved passwords, cookies or browsing history. [Security reports](SECURITY.md) are private.
+[Report a bug](https://github.com/victorcorreal/brou-ios/issues/new/choose), using synthetic data and redacted screenshots. Never send saved passwords, cookies or browsing history. [Security reports](SECURITY.md) are private.
 
 ```sh
 python3 Tests/UpstreamRegression/run.py
@@ -59,3 +59,5 @@ These regression harnesses run production logic against synthetic keychain data 
 ## License and origin
 
 [MIT](LICENSE), with original Office Commun notices and Victor Correal's contributions preserved. [NOTICE](NOTICE) maps the reused code to its current paths. This is an independent companion app, not an Office Commun release. Read [Brou 1.1.0 notes](Docs/RELEASE_1.1.0.md), [upstream maintenance](Docs/UPSTREAM_INTEGRATION.md) and [brand provenance](Brand/README.md).
+
+[Project naming and compatibility](Docs/NAME_MIGRATION.md).
