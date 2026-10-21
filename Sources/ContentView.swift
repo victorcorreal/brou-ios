@@ -43,7 +43,7 @@ struct ContentView: View {
             }
             Button("Not Now", role: .cancel) { browser.toKeep = nil }
         } message: { keepable in
-            Text(keepable.user.isEmpty ? "It goes to iCloud Keychain, for Search on your Mac too." : "\(keepable.user) — in iCloud Keychain, for Search on your Mac too.")
+            Text(keepable.user.isEmpty ? "It goes to iCloud Keychain, for Brou on your Mac too." : "\(keepable.user) — in iCloud Keychain, for Brou on your Mac too.")
         }
     }
 }
@@ -229,7 +229,7 @@ private struct Sidebar: View {
             }
         }
         .listStyle(.sidebar)
-        .navigationTitle("Search")
+        .navigationTitle("Brou")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Menu {

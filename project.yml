@@ -11,8 +11,8 @@ settings:
   base:
     DEVELOPMENT_TEAM: E653G759EN
     CODE_SIGN_STYLE: Automatic
-    MARKETING_VERSION: "1.0.1"
-    CURRENT_PROJECT_VERSION: "1792569136"
+    MARKETING_VERSION: "1.1.0"
+    CURRENT_PROJECT_VERSION: "1792575304"
     SWIFT_VERSION: "5.0"
     TARGETED_DEVICE_FAMILY: "1,2"
 targets:
@@ -51,16 +51,16 @@ targets:
         keychain-access-groups: ["$(AppIdentifierPrefix)cat.correal.search"]
     settings:
       base:
-        PRODUCT_NAME: Search
+        PRODUCT_NAME: Brou
         PRODUCT_BUNDLE_IDENTIFIER: cat.correal.search
         GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_CFBundleDisplayName: Search
+        INFOPLIST_KEY_CFBundleDisplayName: Brou
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.productivity
         INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
-        INFOPLIST_KEY_NSFaceIDUsageDescription: "Search shows a saved password only after Face ID."
+        INFOPLIST_KEY_NSFaceIDUsageDescription: "Brou shows a saved password only after Face ID."
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

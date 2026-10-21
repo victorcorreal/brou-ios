@@ -259,7 +259,7 @@ struct PasswordsView: View {
                     }
                 }
                 if kept.isEmpty {
-                    Text("Passwords you save in Search, on your Mac or on this phone, are in both through iCloud Keychain.")
+                    Text("Passwords you save in Brou, on your Mac or on this phone, are in both through iCloud Keychain.")
                         .foregroundStyle(.secondary)
                 }
                 if site != nil {
@@ -283,7 +283,7 @@ struct PasswordsView: View {
             ) { item in
                 Button("Delete Password", role: .destructive) { forget(item) }
             } message: { _ in
-                Text("It goes from Search on this phone and on your Mac.")
+                Text("It goes from Brou on this phone and on your Mac.")
             }
         }
     }
@@ -342,7 +342,7 @@ struct SettingsView: View {
                 }
                 Section("iCloud") {
                     LabeledContent("Account", value: account)
-                    Text("Bookmarks and passwords are the same here and in Search on your Mac.")
+                    Text("Bookmarks and passwords are the same here and in Brou on your Mac.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -350,7 +350,7 @@ struct SettingsView: View {
                     Button("Clear History", role: .destructive) { history.clear() }
                 }
                 Section {
-                    Text("Search for iPhone and iPad, Victor's own. Built on Search for Mac by Office Commun (MIT License).")
+                    Text("Brou for iPhone and iPad, by Victor Correal. Based on Search by Office Commun (MIT License).")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
