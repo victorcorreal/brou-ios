@@ -57,6 +57,8 @@ struct BlankPage: View {
     @ObservedObject var tab: Tab
     @Binding var typing: String
     @FocusState.Binding var focused: Bool
+    /// The field's top, from the top of what the keyboard leaves.
+    @State private var fieldTop: CGFloat = 0
 
     var body: some View {
         GeometryReader { geo in
@@ -64,11 +66,16 @@ struct BlankPage: View {
                 Spacer()
                 field
                     .frame(maxWidth: min(560, max(0, geo.size.width - 28)))
+                    .onGeometryChange(for: CGFloat.self) { $0.frame(in: .named("blank")).minY } action: { fieldTop = $0 }
                     .overlay(alignment: .top) {
                         if focused, !typing.isEmpty {
+                            // Under the field, down to the keyboard and no
+                            // further; the rest scrolls.
+                            let below: CGFloat = 62
                             Suggestions(typed: typing) { focused = false }
                                 .frame(maxWidth: min(560, max(0, geo.size.width - 28)))
-                                .offset(y: 62)
+                                .frame(height: max(0, geo.size.height - fieldTop - below - 12), alignment: .top)
+                                .offset(y: below)
                         }
                     }
                 Spacer()
@@ -76,6 +83,7 @@ struct BlankPage: View {
             // Lifted a little above centre: dead centre reads as low.
             .padding(.bottom, 60)
             .frame(maxWidth: .infinity)
+            .coordinateSpace(.named("blank"))
         }
         .background(Palette.ground.ignoresSafeArea())
         .overlay(alignment: .bottomTrailing) {
