@@ -25,7 +25,9 @@ With a hardware keyboard, iOS shows only WebKit's form bar, and Brou's bar stays
 
 ## Verification
 
-iPhone Duo simulator, iOS 27.1, outer screen, built with Xcode 27.1 and signed ad hoc. Pages were a GitHub sign-in page and a local test page; the account was made up and kept only in the simulator.
+Every build was made with Xcode 27.1 and signed ad hoc for the simulator.
+
+iPhone Duo simulator, iOS 27.1, outer screen. Pages were a GitHub sign-in page and a local test page; the account was made up and kept only in the simulator.
 
 - Portrait and on its side: a page's sign-in form with the keyboard up.
 - The sign-in strip over the keyboard, and filling from it.
@@ -42,7 +44,11 @@ iPhone Duo simulator, iOS 27.1, outer screen, built with Xcode 27.1 and signed a
 | --- | --- |
 | ![Sign-in strip](iphone-duo/duo-closed-loginstrip.jpg) | ![Suggestions](iphone-duo/duo-closed-landscape-start.jpg) |
 
-On an iPhone 17 simulator (iOS 27.0), the start page had the same fault before the change: suggestions ran on under the keyboard ([screenshot](iphone-duo/iphone17-start-before.jpg)). The iPhone layout is the same code on every iPhone, with no model checks, but the change itself has not yet been run on a normal iPhone simulator: the iOS 27.0 simulator stopped responding on a heavily loaded Mac.
+iPhone 17 simulator, iOS 27.0, the same build: a page's sign-in form with the keyboard up, and the start-page suggestions. On a normal iPhone the bar took less of the screen, but the fault was the same. Done, the sign-in strip and landscape were not repeated there: the simulator kept freezing on a heavily loaded Mac. The iPhone layout is one code path for every iPhone, with no model checks.
+
+| iPhone 17: a page's sign-in form | iPhone 17: start-page suggestions |
+| --- | --- |
+| ![Sign-in form](iphone-duo/iphone17-webform.jpg) | ![Suggestions](iphone-duo/iphone17-start.jpg) |
 
 Not checked here: the inner screen in the simulator (Device Hub's open and fold controls are in its window only), the folded pose, and a physical iPhone Duo.
 
