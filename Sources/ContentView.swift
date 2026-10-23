@@ -68,6 +68,8 @@ private struct NarrowTab: View {
     @ObservedObject var tab: Tab
     @State private var typing = ""
     @FocusState private var focused: Bool
+    /// The keyboard is up for one of the page's own fields, not ours.
+    @State private var pageTyping = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -79,7 +81,11 @@ private struct NarrowTab: View {
                     }
                 }
             LoginStrip()
-            if !tab.isBlank {
+            // While the page is being typed in, the field and buttons step
+            // aside, as Safari's do: the keyboard and its bar have taken half
+            // the screen, more on iPhone Duo's outer one, and the page needs
+            // what is left. The logins stay, right over the keyboard.
+            if !tab.isBlank, !pageTyping {
                 VStack(spacing: 10) {
                     AddressBar(tab: tab, typing: $typing, focused: $focused)
                     if !focused { NarrowButtons(tab: tab) }
@@ -90,6 +96,16 @@ private struct NarrowTab: View {
                 .background(.bar)
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            if !focused { pageTyping = true }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            pageTyping = false
+        }
+        .onChange(of: focused) { _, now in
+            if now { pageTyping = false }
+        }
+        .animation(.snappy, value: pageTyping)
     }
 }
 
