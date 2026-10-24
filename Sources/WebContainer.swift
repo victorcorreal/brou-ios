@@ -54,6 +54,7 @@ struct WebContainer: UIViewRepresentable {
 struct BlankPage: View {
     @EnvironmentObject var browser: Browser
     @Environment(\.scenePhase) private var phase
+    @Environment(\.menuAside) private var menuAside
     @ObservedObject var tab: Tab
     @Binding var typing: String
     @FocusState.Binding var focused: Bool
@@ -87,13 +88,15 @@ struct BlankPage: View {
         }
         .background(Palette.ground.ignoresSafeArea())
         .overlay(alignment: .bottomTrailing) {
-            PageMenu(tab: tab, startPage: true, prepare: { focused = false })
-                .font(.system(size: 18, weight: .medium))
-                .foregroundStyle(.blue)
-                .frame(width: 44, height: 44)
-                .accessibilityIdentifier("start-menu-button")
-                .padding(.trailing, 16)
-                .padding(.bottom, 12)
+            if !menuAside {
+                PageMenu(tab: tab, startPage: true, prepare: { focused = false })
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(.blue)
+                    .frame(width: 44, height: 44)
+                    .accessibilityIdentifier("start-menu-button")
+                    .padding(.trailing, 16)
+                    .padding(.bottom, 12)
+            }
         }
         .onAppear { focused = true }
         .onChange(of: phase) { _, now in

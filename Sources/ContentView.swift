@@ -54,7 +54,12 @@ private struct Narrow: View {
     @EnvironmentObject var browser: Browser
     var body: some View {
         if let tab = browser.active {
-            NarrowTab(tab: tab).id(tab.id)
+            // A navigation stack only for the system's bars: on iPhone Duo's
+            // outer screen they go along the side, under the clock.
+            NavigationStack {
+                NarrowTab(tab: tab).id(tab.id)
+                    .toolbar(.hidden, for: .navigationBar)
+            }
         } else {
             Palette.ground.ignoresSafeArea()
         }
@@ -106,11 +111,55 @@ private struct NarrowTab: View {
             if now { pageTyping = false }
         }
         .animation(.snappy, value: pageTyping)
+        .modifier(MenuAside(tab: tab, prepare: { focused = false }))
+    }
+}
+
+extension EnvironmentValues {
+    /// The menu is in the system's vertical bar, so the bar under the page
+    /// and the start page's corner leave it out.
+    @Entry var menuAside = false
+}
+
+/// The menu, where iOS has a vertical bar for it: on iPhone Duo's outer
+/// screen, the bars go along the side, under the clock. Everywhere else
+/// nothing changes.
+private struct MenuAside: ViewModifier {
+    @ObservedObject var tab: Tab
+    let prepare: () -> Void
+
+    func body(content: Content) -> some View {
+        if #available(iOS 27.1, *) {
+            content.modifier(VerticalBarMenu(tab: tab, prepare: prepare))
+        } else {
+            content
+        }
+    }
+}
+
+@available(iOS 27.1, *)
+private struct VerticalBarMenu: ViewModifier {
+    @Environment(\.toolbarVerticalEdge) private var edge
+    @ObservedObject var tab: Tab
+    let prepare: () -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .environment(\.menuAside, edge != nil)
+            .toolbar {
+                if edge != nil {
+                    ToolbarItem(placement: .bottomBar) {
+                        PageMenu(tab: tab, startPage: tab.isBlank, inBar: true, prepare: prepare)
+                    }
+                    .axisBehavior(.verticalPreferred)
+                }
+            }
     }
 }
 
 private struct NarrowButtons: View {
     @EnvironmentObject var browser: Browser
+    @Environment(\.menuAside) private var menuAside
     @ObservedObject var tab: Tab
 
     var body: some View {
@@ -123,8 +172,10 @@ private struct NarrowButtons: View {
                 .disabled(!tab.canGoForward)
                 .accessibilityLabel("Forward")
             Spacer()
-            PageMenu(tab: tab)
-            Spacer()
+            if !menuAside {
+                PageMenu(tab: tab)
+                Spacer()
+            }
             Button { browser.sheet = .bookmarks } label: { Image(systemName: "book") }
                 .accessibilityLabel("Bookmarks")
             Spacer()

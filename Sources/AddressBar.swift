@@ -163,6 +163,8 @@ struct PageMenu: View {
     @EnvironmentObject var bookmarks: Bookmarks
     @ObservedObject var tab: Tab
     var startPage = false
+    /// In a system bar, which draws its own circle round it.
+    var inBar = false
     var prepare: () -> Void = {}
 
     var body: some View {
@@ -207,7 +209,11 @@ struct PageMenu: View {
             Button { prepare(); browser.showPasswords() } label: { Label("Passwords", systemImage: "key") }
             Button { prepare(); browser.sheet = .settings } label: { Label("Settings", systemImage: "gearshape") }
         } label: {
-            Image(systemName: "ellipsis.circle")
+            if inBar {
+                Label(startPage ? "Menu" : "Page", systemImage: "ellipsis")
+            } else {
+                Image(systemName: "ellipsis.circle")
+            }
         }
         .accessibilityLabel(startPage ? "Menu" : "Page")
         .background(AnchorView(anchor: anchor))
