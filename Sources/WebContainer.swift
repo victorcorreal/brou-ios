@@ -40,9 +40,14 @@ struct WebContainer: UIViewRepresentable {
         tab.web.removeFromSuperview()
         tab.web.translatesAutoresizingMaskIntoConstraints = false
         view.insertSubview(tab.web, belowSubview: view.band)
+        // Beside the page, where iOS keeps a column for the clock and the
+        // camera (iPhone Duo on its side, an iPhone's Dynamic Island), this
+        // view shows the colour of the page's top, as the band under the
+        // clock does; the page itself, its text and its scroll bar stay
+        // clear of it.
         NSLayoutConstraint.activate([
-            tab.web.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tab.web.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tab.web.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tab.web.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             tab.web.topAnchor.constraint(equalTo: view.topAnchor),
             tab.web.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
@@ -163,8 +168,10 @@ struct PageArea: View {
 
     var body: some View {
         ZStack {
-            // Under the clock too: a dark page shouldn't end in a white band.
-            WebContainer(tab: tab, band: tab.isBlank ? .clear : tab.shade ?? .systemBackground).ignoresSafeArea(edges: .top)
+            // Under the clock too, and beside it and under the home bar: a
+            // dark page shouldn't end in a white or black band.
+            WebContainer(tab: tab, band: tab.isBlank ? .clear : tab.shade ?? .systemBackground)
+                .ignoresSafeArea(.container, edges: [.top, .horizontal, .bottom])
             if tab.isBlank { BlankPage(tab: tab, typing: $typing, focused: $focused) }
         }
     }

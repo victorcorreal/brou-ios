@@ -236,6 +236,7 @@ private struct WideTab: View {
     @ObservedObject var tab: Tab
     @State private var typing = ""
     @FocusState private var focused: Bool
+    @State private var room = TopRoom()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -256,8 +257,10 @@ private struct WideTab: View {
                     .accessibilityLabel("New Tab")
             }
             .font(.title3)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
+            .padding(.leading, room.leading)
+            .padding(.trailing, room.trailing)
+            .padding(.top, room.top)
+            .padding(.bottom, 8)
             .background(tab.isBlank ? AnyShapeStyle(Palette.ground) : AnyShapeStyle(.bar))
             LoginStrip()
             PageArea(tab: tab, typing: $typing, focused: $focused)
@@ -268,6 +271,42 @@ private struct WideTab: View {
                             .padding(12)
                     }
                 }
+        }
+        // The bar's colour goes up to the edge, behind the clock; TopRoom
+        // says where its buttons go.
+        .ignoresSafeArea(.container, edges: .top)
+        .onGeometryChange(for: TopRoom.self) { TopRoom($0) } action: { room = $0 }
+    }
+}
+
+/// Where the wide layout's bar puts its buttons at the top of the screen.
+private struct TopRoom: Equatable {
+    var top: CGFloat = 8
+    var leading: CGFloat = 16
+    var trailing: CGFloat = 16
+
+    init() {}
+
+    init(_ proxy: GeometryProxy) {
+        let status = proxy.safeAreaInsets.top
+        // Level with the clock, where the status bar is beside the page: on
+        // iPhone Duo open on its side, or an iPhone on its side.
+        guard status > 0 else { top = 20; return }
+        // Under the status bar, as on iPad.
+        top = status + 8
+        guard #available(iOS 27.1, *),
+              let corner = proxy.reservedRegions(kind: .occlusion).first(where: { $0.isActive && $0.frame.minY <= 0 })
+        else { return }
+        // iPhone Duo open upright: the camera and the clock hold one corner
+        // of the band iOS keeps above the page. The buttons go up into the
+        // rest of that band, level with the clock, and stop short of the
+        // corner. The clock and Wi-Fi reach about 40 points out of the
+        // camera's region, so they get 52 more.
+        top = 20
+        if corner.frame.midX > proxy.size.width / 2 {
+            trailing = max(trailing, proxy.size.width - corner.frame.minX + 52)
+        } else {
+            leading = max(leading, corner.frame.maxX + 52)
         }
     }
 }
