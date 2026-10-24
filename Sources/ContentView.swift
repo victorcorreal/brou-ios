@@ -101,8 +101,15 @@ private struct NarrowTab: View {
                 .background(.bar)
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
-            if !focused { pageTyping = true }
+        // By the keyboard actually on the screen: iOS also says one will show
+        // when the device turns with none up, and then never that it hides.
+        // A hardware keyboard's bar alone leaves room for ours.
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification).merge(
+            with: NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification))
+        ) { note in
+            let end = note.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect ?? .zero
+            let shown = (note.object as? UIScreen).map { $0.bounds.intersection(end).height } ?? end.height
+            pageTyping = !focused && shown > 100
         }
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
             pageTyping = false
