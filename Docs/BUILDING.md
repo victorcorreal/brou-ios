@@ -2,7 +2,9 @@
 
 ## Simulator, no signing secrets
 
-Use full Xcode and XcodeGen. The deployment target is iOS 18; current validation uses Xcode 27. Install XcodeGen with `brew install xcodegen` if needed.
+Use full Xcode and XcodeGen. The deployment target is iOS 18; current validation uses Xcode 27.1. Install XcodeGen with `brew install xcodegen` if needed.
+
+iPhone Duo needs the iOS 27.1 SDK (Xcode 27.1 or later). Built with an older SDK, Brou runs there in a compatibility frame beside the status bar instead of using the whole screen.
 
 ```sh
 xcodegen generate
@@ -13,6 +15,19 @@ xcodebuild -project Brou.xcodeproj -scheme Brou \
 ```
 
 Select an available iPhone/iPad simulator in Xcode to run. The project and scheme are Brou; the product is Brou.app. The simulator is not evidence of real iCloud sync. Do not install a simulator product on a physical phone.
+
+The unsigned product above stops at launch: CloudKit wants its entitlement. To run it from the command line, sign it ad hoc instead, which keeps the entitlements and needs no account:
+
+```sh
+xcodebuild -project Brou.xcodeproj -scheme Brou \
+  -configuration Debug -sdk iphonesimulator \
+  -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath build/Simulator CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- \
+  DEVELOPMENT_TEAM= build
+xcrun simctl install booted build/Simulator/Build/Products/Debug-iphonesimulator/Brou.app
+```
+
+On iPhone Duo, check both screens, closed and open, in both orientations, with the keyboard up for the address field and for a page's own field. Xcode's Device Hub opens, closes and folds the simulated device.
 
 ## Your own Apple Developer account
 

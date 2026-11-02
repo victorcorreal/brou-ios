@@ -40,9 +40,14 @@ struct WebContainer: UIViewRepresentable {
         tab.web.removeFromSuperview()
         tab.web.translatesAutoresizingMaskIntoConstraints = false
         view.insertSubview(tab.web, belowSubview: view.band)
+        // Beside the page, where iOS keeps a column for the clock and the
+        // camera (iPhone Duo on its side, an iPhone's Dynamic Island), this
+        // view shows the colour of the page's top, as the band under the
+        // clock does; the page itself, its text and its scroll bar stay
+        // clear of it.
         NSLayoutConstraint.activate([
-            tab.web.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tab.web.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tab.web.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tab.web.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             tab.web.topAnchor.constraint(equalTo: view.topAnchor),
             tab.web.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
@@ -54,9 +59,12 @@ struct WebContainer: UIViewRepresentable {
 struct BlankPage: View {
     @EnvironmentObject var browser: Browser
     @Environment(\.scenePhase) private var phase
+    @Environment(\.buttonsAside) private var aside
     @ObservedObject var tab: Tab
     @Binding var typing: String
     @FocusState.Binding var focused: Bool
+    /// The field's top, from the top of what the keyboard leaves.
+    @State private var fieldTop: CGFloat = 0
 
     var body: some View {
         GeometryReader { geo in
@@ -64,11 +72,16 @@ struct BlankPage: View {
                 Spacer()
                 field
                     .frame(maxWidth: min(560, max(0, geo.size.width - 28)))
+                    .onGeometryChange(for: CGFloat.self) { $0.frame(in: .named("blank")).minY } action: { fieldTop = $0 }
                     .overlay(alignment: .top) {
                         if focused, !typing.isEmpty {
+                            // Under the field, down to the keyboard and no
+                            // further; the rest scrolls.
+                            let below: CGFloat = 62
                             Suggestions(typed: typing) { focused = false }
                                 .frame(maxWidth: min(560, max(0, geo.size.width - 28)))
-                                .offset(y: 62)
+                                .frame(height: max(0, geo.size.height - fieldTop - below - 12), alignment: .top)
+                                .offset(y: below)
                         }
                     }
                 Spacer()
@@ -76,16 +89,19 @@ struct BlankPage: View {
             // Lifted a little above centre: dead centre reads as low.
             .padding(.bottom, 60)
             .frame(maxWidth: .infinity)
+            .coordinateSpace(.named("blank"))
         }
         .background(Palette.ground.ignoresSafeArea())
         .overlay(alignment: .bottomTrailing) {
-            PageMenu(tab: tab, startPage: true, prepare: { focused = false })
-                .font(.system(size: 18, weight: .medium))
-                .foregroundStyle(.blue)
-                .frame(width: 44, height: 44)
-                .accessibilityIdentifier("start-menu-button")
-                .padding(.trailing, 16)
-                .padding(.bottom, 12)
+            if !aside {
+                PageMenu(tab: tab, startPage: true, prepare: { focused = false })
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(.blue)
+                    .frame(width: 44, height: 44)
+                    .accessibilityIdentifier("start-menu-button")
+                    .padding(.trailing, 16)
+                    .padding(.bottom, 12)
+            }
         }
         .onAppear { focused = true }
         .onChange(of: phase) { _, now in
@@ -152,8 +168,10 @@ struct PageArea: View {
 
     var body: some View {
         ZStack {
-            // Under the clock too: a dark page shouldn't end in a white band.
-            WebContainer(tab: tab, band: tab.isBlank ? .clear : tab.shade ?? .systemBackground).ignoresSafeArea(edges: .top)
+            // Under the clock too, and beside it and under the home bar: a
+            // dark page shouldn't end in a white or black band.
+            WebContainer(tab: tab, band: tab.isBlank ? .clear : tab.shade ?? .systemBackground)
+                .ignoresSafeArea(.container, edges: [.top, .horizontal, .bottom])
             if tab.isBlank { BlankPage(tab: tab, typing: $typing, focused: $focused) }
         }
     }
