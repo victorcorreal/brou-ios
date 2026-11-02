@@ -59,7 +59,7 @@ struct WebContainer: UIViewRepresentable {
 struct BlankPage: View {
     @EnvironmentObject var browser: Browser
     @Environment(\.scenePhase) private var phase
-    @Environment(\.menuAside) private var menuAside
+    @Environment(\.buttonsAside) private var aside
     @ObservedObject var tab: Tab
     @Binding var typing: String
     @FocusState.Binding var focused: Bool
@@ -93,7 +93,7 @@ struct BlankPage: View {
         }
         .background(Palette.ground.ignoresSafeArea())
         .overlay(alignment: .bottomTrailing) {
-            if !menuAside {
+            if !aside {
                 PageMenu(tab: tab, startPage: true, prepare: { focused = false })
                     .font(.system(size: 18, weight: .medium))
                     .foregroundStyle(.blue)

@@ -73,8 +73,15 @@ private struct NarrowTab: View {
     @ObservedObject var tab: Tab
     @State private var typing = ""
     @FocusState private var focused: Bool
-    /// The keyboard is up for one of the page's own fields, not ours.
-    @State private var pageTyping = false
+    /// How much of the screen the keyboard takes, as laid out: not from iOS's
+    /// keyboard notices, which also fire when the device turns with none up,
+    /// with the old orientation's frame and no notice that it hid. Brou's bar
+    /// then stayed away for good.
+    @State private var keyboard: CGFloat = 0
+
+    /// The keyboard is up for one of the page's own fields, not ours. A
+    /// hardware keyboard's bar alone leaves room for our bar.
+    private var pageTyping: Bool { !focused && keyboard > 100 }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -91,74 +98,156 @@ private struct NarrowTab: View {
             // the screen, more on iPhone Duo's outer one, and the page needs
             // what is left. The logins stay, right over the keyboard.
             if !tab.isBlank, !pageTyping {
-                VStack(spacing: 10) {
-                    AddressBar(tab: tab, typing: $typing, focused: $focused)
-                    if !focused { NarrowButtons(tab: tab) }
-                }
-                .padding(.horizontal, 12)
-                .padding(.top, 8)
-                .padding(.bottom, focused ? 8 : 2)
-                .background(.bar)
+                NarrowBar(tab: tab, typing: $typing, focused: $focused)
             }
         }
-        // By the keyboard actually on the screen: iOS also says one will show
-        // when the device turns with none up, and then never that it hides.
-        // A hardware keyboard's bar alone leaves room for ours.
-        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification).merge(
-            with: NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification))
-        ) { note in
-            let end = note.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect ?? .zero
-            let shown = (note.object as? UIScreen).map { $0.bounds.intersection(end).height } ?? end.height
-            pageTyping = !focused && shown > 100
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
-            pageTyping = false
-        }
-        .onChange(of: focused) { _, now in
-            if now { pageTyping = false }
-        }
+        .background { KeyboardReach { keyboard = $0 }.ignoresSafeArea() }
         .animation(.snappy, value: pageTyping)
-        .modifier(MenuAside(tab: tab, prepare: { focused = false }))
+        .modifier(SideButtons(tab: tab, prepare: { focused = false }))
+    }
+}
+
+/// How far up the screen the keyboard reaches, from UIKit's keyboard layout
+/// guide: laid out with the view, so always in the orientation on screen.
+/// Spread over the whole screen, keyboard included.
+private struct KeyboardReach: UIViewRepresentable {
+    let changed: (CGFloat) -> Void
+
+    func makeUIView(context: Context) -> Probe { Probe(changed: changed) }
+    func updateUIView(_ probe: Probe, context: Context) { probe.changed = changed }
+
+    final class Probe: UIView {
+        var changed: (CGFloat) -> Void
+        private var reach: CGFloat = 0
+
+        init(changed: @escaping (CGFloat) -> Void) {
+            self.changed = changed
+            super.init(frame: .zero)
+            isUserInteractionEnabled = false
+            // With no keyboard the guide sits at the very bottom, with no
+            // height, rather than over the home bar.
+            keyboardLayoutGuide.usesBottomSafeArea = false
+            // A view tied to the guide, so its changes lay this one out.
+            let mark = UIView()
+            mark.isHidden = true
+            mark.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(mark)
+            NSLayoutConstraint.activate([
+                mark.leadingAnchor.constraint(equalTo: leadingAnchor),
+                mark.widthAnchor.constraint(equalToConstant: 0),
+                mark.topAnchor.constraint(equalTo: keyboardLayoutGuide.topAnchor),
+                mark.bottomAnchor.constraint(equalTo: bottomAnchor),
+            ])
+        }
+
+        required init?(coder: NSCoder) { fatalError("init(coder:) is not used") }
+
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            let now = max(0, bounds.maxY - keyboardLayoutGuide.layoutFrame.minY)
+            guard now != reach else { return }
+            reach = now
+            // Not during SwiftUI's own layout pass.
+            DispatchQueue.main.async { [changed] in changed(now) }
+        }
+    }
+}
+
+/// The field under the page, and Brou's buttons under it unless iOS has them
+/// in its vertical bar.
+private struct NarrowBar: View {
+    @Environment(\.buttonsAside) private var aside
+    @ObservedObject var tab: Tab
+    @Binding var typing: String
+    @FocusState.Binding var focused: Bool
+
+    var body: some View {
+        VStack(spacing: 10) {
+            AddressBar(tab: tab, typing: $typing, focused: $focused)
+            if !focused, !aside { NarrowButtons(tab: tab) }
+        }
+        .padding(.horizontal, 12)
+        .padding(.top, 8)
+        .padding(.bottom, focused || aside ? 8 : 2)
+        .background(.bar)
     }
 }
 
 extension EnvironmentValues {
-    /// The menu is in the system's vertical bar, so the bar under the page
-    /// and the start page's corner leave it out.
-    @Entry var menuAside = false
+    /// Brou's buttons are in the system's vertical bar, so Brou's own bars
+    /// and the start page's corner leave them out.
+    @Entry var buttonsAside = false
 }
 
-/// The menu, where iOS has a vertical bar for it: on iPhone Duo's outer
-/// screen, the bars go along the side, under the clock. Everywhere else
-/// nothing changes.
-private struct MenuAside: ViewModifier {
+/// Where iOS has a vertical bar — iPhone Duo's outer screen, and the Duo open
+/// on its side — Brou's buttons go in it, as Apple asks: iOS never moves a
+/// bar an app draws itself. Everywhere else, and before iOS 27.1, they stay
+/// in Brou's own bar. The wide layout has its tabs and bookmarks in the
+/// sidebar, so it puts New Tab there instead.
+private struct SideButtons: ViewModifier {
     @ObservedObject var tab: Tab
+    var wide = false
     let prepare: () -> Void
 
     func body(content: Content) -> some View {
         if #available(iOS 27.1, *) {
-            content.modifier(VerticalBarMenu(tab: tab, prepare: prepare))
+            content.modifier(VerticalBar(tab: tab, wide: wide, prepare: prepare))
         } else {
             content
         }
     }
 }
 
+/// Back at the top, where Apple puts navigation. The menu, which holds the
+/// most, last, and the last to give way when the bar runs out of room. Each
+/// one has a title for when iOS lists it in the bar's overflow.
 @available(iOS 27.1, *)
-private struct VerticalBarMenu: ViewModifier {
+private struct VerticalBar: ViewModifier {
+    @EnvironmentObject var browser: Browser
     @Environment(\.toolbarVerticalEdge) private var edge
     @ObservedObject var tab: Tab
+    let wide: Bool
     let prepare: () -> Void
 
     func body(content: Content) -> some View {
         content
-            .environment(\.menuAside, edge != nil)
+            .environment(\.buttonsAside, edge != nil)
             .toolbar {
                 if edge != nil {
+                    if !tab.isBlank {
+                        ToolbarItem(placement: .bottomBar) {
+                            Button { tab.back() } label: { Label("Back", systemImage: "chevron.backward") }
+                                .disabled(!tab.canGoBack)
+                        }
+                        .axisBehavior(.verticalPreferred)
+                        .visibilityPriority(.high)
+                        ToolbarItem(placement: .bottomBar) {
+                            Button { tab.forward() } label: { Label("Forward", systemImage: "chevron.forward") }
+                                .disabled(!tab.canGoForward)
+                        }
+                        .axisBehavior(.verticalPreferred)
+                    }
+                    if wide {
+                        ToolbarItem(placement: .bottomBar) {
+                            Button { browser.newTab() } label: { Label("New Tab", systemImage: "plus") }
+                        }
+                        .axisBehavior(.verticalPreferred)
+                    } else {
+                        ToolbarItem(placement: .bottomBar) {
+                            Button { prepare(); browser.sheet = .bookmarks } label: { Label("Bookmarks", systemImage: "book") }
+                        }
+                        .axisBehavior(.verticalPreferred)
+                        ToolbarItem(placement: .bottomBar) {
+                            Button { prepare(); browser.sheet = .tabs } label: { Label("Tabs", systemImage: "square.on.square") }
+                                .badge(browser.tabs.count)
+                        }
+                        .axisBehavior(.verticalPreferred)
+                    }
                     ToolbarItem(placement: .bottomBar) {
                         PageMenu(tab: tab, startPage: tab.isBlank, inBar: true, prepare: prepare)
                     }
                     .axisBehavior(.verticalPreferred)
+                    .visibilityPriority(.high)
                 }
             }
     }
@@ -166,7 +255,6 @@ private struct VerticalBarMenu: ViewModifier {
 
 private struct NarrowButtons: View {
     @EnvironmentObject var browser: Browser
-    @Environment(\.menuAside) private var menuAside
     @ObservedObject var tab: Tab
 
     var body: some View {
@@ -179,10 +267,8 @@ private struct NarrowButtons: View {
                 .disabled(!tab.canGoForward)
                 .accessibilityLabel("Forward")
             Spacer()
-            if !menuAside {
-                PageMenu(tab: tab)
-                Spacer()
-            }
+            PageMenu(tab: tab)
+            Spacer()
             Button { browser.sheet = .bookmarks } label: { Image(systemName: "book") }
                 .accessibilityLabel("Bookmarks")
             Spacer()
@@ -240,28 +326,7 @@ private struct WideTab: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 14) {
-                Button { tab.back() } label: { Image(systemName: "chevron.backward") }
-                    .disabled(!tab.canGoBack)
-                    .accessibilityLabel("Back")
-                Button { tab.forward() } label: { Image(systemName: "chevron.forward") }
-                    .disabled(!tab.canGoForward)
-                    .accessibilityLabel("Forward")
-                if tab.isBlank {
-                    Spacer()
-                } else {
-                    AddressBar(tab: tab, typing: $typing, focused: $focused)
-                }
-                if !tab.isBlank { PageMenu(tab: tab) }
-                Button { browser.newTab() } label: { Image(systemName: "plus") }
-                    .accessibilityLabel("New Tab")
-            }
-            .font(.title3)
-            .padding(.leading, room.leading)
-            .padding(.trailing, room.trailing)
-            .padding(.top, room.top)
-            .padding(.bottom, 8)
-            .background(tab.isBlank ? AnyShapeStyle(Palette.ground) : AnyShapeStyle(.bar))
+            WideBar(tab: tab, typing: $typing, focused: $focused, room: room)
             LoginStrip()
             PageArea(tab: tab, typing: $typing, focused: $focused)
                 .overlay(alignment: .top) {
@@ -276,6 +341,47 @@ private struct WideTab: View {
         // says where its buttons go.
         .ignoresSafeArea(.container, edges: .top)
         .onGeometryChange(for: TopRoom.self) { TopRoom($0) } action: { room = $0 }
+        .modifier(SideButtons(tab: tab, wide: true, prepare: { focused = false }))
+    }
+}
+
+/// The bar along the top beside the sidebar: the field, with Brou's buttons
+/// round it unless iOS has them in its vertical bar.
+private struct WideBar: View {
+    @EnvironmentObject var browser: Browser
+    @Environment(\.buttonsAside) private var aside
+    @ObservedObject var tab: Tab
+    @Binding var typing: String
+    @FocusState.Binding var focused: Bool
+    let room: TopRoom
+
+    var body: some View {
+        HStack(spacing: 14) {
+            if !aside {
+                Button { tab.back() } label: { Image(systemName: "chevron.backward") }
+                    .disabled(!tab.canGoBack)
+                    .accessibilityLabel("Back")
+                Button { tab.forward() } label: { Image(systemName: "chevron.forward") }
+                    .disabled(!tab.canGoForward)
+                    .accessibilityLabel("Forward")
+            }
+            if tab.isBlank {
+                Spacer()
+            } else {
+                AddressBar(tab: tab, typing: $typing, focused: $focused)
+            }
+            if !aside {
+                if !tab.isBlank { PageMenu(tab: tab) }
+                Button { browser.newTab() } label: { Image(systemName: "plus") }
+                    .accessibilityLabel("New Tab")
+            }
+        }
+        .font(.title3)
+        .padding(.leading, room.leading)
+        .padding(.trailing, room.trailing)
+        .padding(.top, room.top)
+        .padding(.bottom, 8)
+        .background(tab.isBlank ? AnyShapeStyle(Palette.ground) : AnyShapeStyle(.bar))
     }
 }
 
